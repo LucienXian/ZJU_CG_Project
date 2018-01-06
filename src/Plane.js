@@ -126,6 +126,8 @@ var FSHADER_BOWIE_SOURCE =
   '   gl_FragColor = v_Color;\n' +
   '}\n' ;
 
+
+
 function main(){
   var canvas = document.getElementById('webgl');
   //var nf = document.getElementById('nearFar');
@@ -331,7 +333,66 @@ function main(){
     requestAnimationFrame(tick, canvas);
   }
   tick();
+
+    replayMessage = document.getElementById("replayMessage");
+    fieldDistance = document.getElementById("distValue");
+    document.addEventListener('mouseup', handleMouseUp, false);
+    document.addEventListener('touchend', handleTouchEnd, false);
+
+    resetGame();
+  //控制游戏结束
+    loop();
 }
+
+//关于游戏结束页面更新
+var game;
+var replayMessage,fieldDistance;
+
+function resetGame() {
+    game = {
+        status: "playing",
+        energy:100,
+    };
+}
+function handleMouseUp(event){
+    if (game.status == "waitingReplay"){
+        resetGame();
+        replayMessage.style.display="none";
+    }
+}
+
+
+function handleTouchEnd(event){
+    if (game.status == "waitingReplay") {
+        resetGame();
+        replayMessage.style.display = "none";
+    }
+}
+function updateEnergy(){
+    game.energy=game.energy-1;
+    console.log(game.energy);
+    //game.distance += game.speed*deltaTime*game.ratioSpeedDistance;
+    fieldDistance.innerHTML =game.energy;
+    if (game.energy <1){
+        game.status = "gameover";
+    }
+}
+function loop() {
+
+    if (game.status == "playing") {
+        updateEnergy();
+
+    } else if (game.status == "gameover") {
+
+        replayMessage.style.display="block";
+        game.status = "waitingReplay";
+
+    } else if (game.status == "waitingReplay") {
+
+    }
+    requestAnimationFrame(loop);
+}
+
 
 var FlyDis = 0;
 var angel = 0;
@@ -1342,6 +1403,3 @@ function calcNormal(p0, p1, p2) {
   v.normalize();
   return v.elements;
 }
-
-
-
