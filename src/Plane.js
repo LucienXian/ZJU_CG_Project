@@ -1,4 +1,4 @@
-var VSHADER_PLANE_SOURCE = 
+var VSHADER_SOURCE = 
   'attribute vec4 a_Position;\n' +
   'attribute vec4 a_Normal;\n' +       
   'attribute vec4 a_Color;\n' +
@@ -21,7 +21,7 @@ var VSHADER_PLANE_SOURCE =
   '   v_Color = vec4(diffuse + ambient, a_Color.a);\n' +
   '}\n';
 
-var FSHADER_PLANE_SOURCE = 
+var FSHADER_SOURCE = 
   '#ifdef GL_ES\n' +
   'precision mediump float;\n' +
   '#endif\n' +
@@ -30,101 +30,6 @@ var FSHADER_PLANE_SOURCE =
   '   gl_FragColor = v_Color;\n' +
   '}\n' ;
 
-var VSHADER_SPHERE_SOURCE = 
-  'attribute vec4 a_Position;\n' +
-  'attribute vec4 a_Normal;\n' +       
-  'attribute vec4 a_Color;\n' +
-  'uniform vec3 u_LightColor;\n' +     
-  'uniform vec3 u_LightDirection;\n' + 
-  'uniform vec3 u_AmbientLight;\n' +
-  'uniform vec3 u_LightPosition;\n' +
-  'uniform mat4 u_MvpMatrix;\n' +
-  'uniform mat4 u_ModelMatrix;\n' +
-  'uniform mat4 u_NormalMatrix;\n' +
-  'varying vec4 v_Color;\n' +
-  'void main() {\n' +
-  '   gl_Position = u_MvpMatrix * a_Position;\n' +
-  '   vec3 normal = normalize(vec3(u_NormalMatrix * a_Normal));\n' +
-  '   vec4 vertexPosition = u_ModelMatrix * a_Position;\n' +
-  '   vec3 lightDirection = normalize(u_LightPosition - vec3(vertexPosition));\n' +
-  '   float nDotL = max(dot(lightDirection, normal), 0.0);\n' +
-  '   vec3 diffuse = u_LightColor * a_Color.rgb * nDotL;\n' +
-  '   vec3 ambient = u_AmbientLight *a_Color.rgb;\n' +
-  '   v_Color = vec4(diffuse + ambient, a_Color.a);\n' +
-  '}\n';
-
-var FSHADER_SPHERE_SOURCE = 
-  '#ifdef GL_ES\n' +
-  'precision mediump float;\n' +
-  '#endif\n' +
-  'varying vec4 v_Color;\n' +
-  'void main(){\n' +
-  '   gl_FragColor = v_Color;\n' +
-  '}\n' ;
-
-var VSHADER_CLOUD_SOURCE = 
-  'attribute vec4 a_Position;\n' +
-  'attribute vec4 a_Normal;\n' +       
-  'attribute vec4 a_Color;\n' +
-  'uniform vec3 u_LightColor;\n' +     
-  'uniform vec3 u_LightDirection;\n' + 
-  'uniform vec3 u_AmbientLight;\n' +
-  'uniform vec3 u_LightPosition;\n' +
-  'uniform mat4 u_MvpMatrix;\n' +
-  'uniform mat4 u_ModelMatrix;\n' +
-  'uniform mat4 u_NormalMatrix;\n' +
-  'varying vec4 v_Color;\n' +
-  'void main() {\n' +
-  '   gl_Position = u_MvpMatrix * a_Position;\n' +
-  '   vec3 normal = normalize(vec3(u_NormalMatrix * a_Normal));\n' +
-  '   vec4 vertexPosition = u_ModelMatrix * a_Position;\n' +
-  '   vec3 lightDirection = normalize(u_LightPosition - vec3(vertexPosition));\n' +
-  '   float nDotL = max(dot(lightDirection, normal), 0.0);\n' +
-  '   vec3 diffuse = u_LightColor * a_Color.rgb * nDotL;\n' +
-  '   vec3 ambient = u_AmbientLight *a_Color.rgb;\n' +
-  '   v_Color = vec4(diffuse + ambient, a_Color.a);\n' +
-  '}\n';
-
-var FSHADER_CLOUD_SOURCE = 
-  '#ifdef GL_ES\n' +
-  'precision mediump float;\n' +
-  '#endif\n' +
-  'varying vec4 v_Color;\n' +
-  'void main(){\n' +
-  '   gl_FragColor = v_Color;\n' +
-  '}\n' ;
-
-var VSHADER_BOWIE_SOURCE = 
-  'attribute vec4 a_Position;\n' +
-  'attribute vec4 a_Normal;\n' +       
-  'attribute vec4 a_Color;\n' +
-  'uniform vec3 u_LightColor;\n' +     
-  'uniform vec3 u_LightDirection;\n' + 
-  'uniform vec3 u_AmbientLight;\n' +
-  'uniform vec3 u_LightPosition;\n' +
-  'uniform mat4 u_MvpMatrix;\n' +
-  'uniform mat4 u_ModelMatrix;\n' +
-  'uniform mat4 u_NormalMatrix;\n' +
-  'varying vec4 v_Color;\n' +
-  'void main() {\n' +
-  '   gl_Position = u_MvpMatrix * a_Position;\n' +
-  '   vec3 normal = normalize(vec3(u_NormalMatrix * a_Normal));\n' +
-  '   vec4 vertexPosition = u_ModelMatrix * a_Position;\n' +
-  '   vec3 lightDirection = normalize(u_LightPosition - vec3(vertexPosition));\n' +
-  '   float nDotL = max(dot(lightDirection, normal), 0.0);\n' +
-  '   vec3 diffuse = u_LightColor * a_Color.rgb * nDotL;\n' +
-  '   vec3 ambient = u_AmbientLight *a_Color.rgb;\n' +
-  '   v_Color = vec4(diffuse + ambient, a_Color.a);\n' +
-  '}\n';
-
-var FSHADER_BOWIE_SOURCE = 
-  '#ifdef GL_ES\n' +
-  'precision mediump float;\n' +
-  '#endif\n' +
-  'varying vec4 v_Color;\n' +
-  'void main(){\n' +
-  '   gl_FragColor = v_Color;\n' +
-  '}\n' ;
 
 
 
@@ -139,10 +44,10 @@ function main(){
     return;
   }
 
-  var PlaneProgram = createProgram(gl, VSHADER_PLANE_SOURCE, FSHADER_PLANE_SOURCE);
-  var SPHEREObjProgram = createProgram(gl, VSHADER_SPHERE_SOURCE, FSHADER_SPHERE_SOURCE);
-  var CLOUDObjProgram = createProgram(gl, VSHADER_CLOUD_SOURCE, FSHADER_CLOUD_SOURCE);
-  var BOWIEObjProgram = createProgram(gl, VSHADER_BOWIE_SOURCE, FSHADER_BOWIE_SOURCE);
+  var PlaneProgram = createProgram(gl, VSHADER_SOURCE, FSHADER_SOURCE);
+  var SPHEREObjProgram = createProgram(gl, VSHADER_SOURCE, FSHADER_SOURCE)
+  var CLOUDObjProgram = createProgram(gl, VSHADER_SOURCE, FSHADER_SOURCE)
+  var BOWIEObjProgram = createProgram(gl, VSHADER_SOURCE, FSHADER_SOURCE)
   if (!PlaneProgram || !SPHEREObjProgram || !CLOUDObjProgram || !BOWIEObjProgram) {
       console.log('Failed to intialize shaders.');
       return;
