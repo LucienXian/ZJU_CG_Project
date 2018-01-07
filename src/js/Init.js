@@ -51,7 +51,7 @@ function SPHEREObjInit()
 		return;
 	}
 	
-	var model1 = initObjVertexBuffers(gl, SPHEREObjProgram);
+	model1 = initObjVertexBuffers(gl, SPHEREObjProgram);
 	if (!model1) 
 	{
       console.log('Failed to set the vertex information');
@@ -78,14 +78,14 @@ function CLOUDObjInit()
 	CLOUDObjProgram.u_LightPosition = gl.getUniformLocation(CLOUDObjProgram, 'u_LightPosition');
 	CLOUDObjProgram.u_AmbientLight = gl.getUniformLocation(CLOUDObjProgram, 'u_AmbientLight');
 	if (CLOUDObjProgram.a_Position < 0 ||  CLOUDObjProgram.a_Normal < 0 || CLOUDObjProgram.a_Color < 0 ||
-        !CLOUDObjProgram.u_MvpMatrix || !CLOUDObjProgram.u_NormalMatrix || CLOUDObjProgram.u_LightColor ||
+        !CLOUDObjProgram.u_MvpMatrix || !CLOUDObjProgram.u_NormalMatrix || !CLOUDObjProgram.u_LightColor ||
 		!CLOUDObjProgram.u_LightPosition || !CLOUDObjProgram.u_AmbientLight) 
 	{
 		console.log('attribute, uniform storage failed'); 
 		return;
 	}
 	
-	var model2 = initObjVertexBuffers(gl, CLOUDObjProgram);
+	model2 = initObjVertexBuffers(gl, CLOUDObjProgram);
 	if (!model2) 
 	{
       console.log('Failed to set the vertex information');
@@ -119,7 +119,7 @@ function BOWIEObjInit()
 		return;
 	}
 	
-	var model3 = initObjVertexBuffers(gl, BOWIEObjProgram);
+	model3 = initObjVertexBuffers(gl, BOWIEObjProgram);
 	if (!model3) 
 	{
       console.log('Failed to set the vertex information');
