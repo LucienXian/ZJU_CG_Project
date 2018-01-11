@@ -4,6 +4,8 @@
     <meta charset="utf-8" />
     <title>A simmmmmple plane</title>
     <link rel="stylesheet" type="text/css" href="../game.css" />
+      <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+      <script src="https://cdn.bootcss.com/html2canvas/0.4.1/html2canvas.js"></script>
   </head>
 
   <body onload="main()">
@@ -22,6 +24,11 @@
     <canvas id="webgl" width="1300" height="750">
     A simmmmmple plane
     </canvas>
+
+    <button id="saveImageBtn">Save Image</button>
+    <button id="downloadImageBtn">Download Image</button>
+    <a class="down" href="" download="downImg">下载</a>
+
 	<script src="../../lib/cuon-utils.js"></script>
     <script src="../../lib/webgl-utils.js"></script>
     <script src="../../lib/webgl-debug.js"></script>
