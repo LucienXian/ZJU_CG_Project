@@ -35,24 +35,31 @@ var ObjPostion = new Array(20);
 ObjPostion[0] = new Float32Array([6,7,6]);
 ObjPostion[1] = new Float32Array([20,-3,-4]);
 ObjPostion[2] = new Float32Array([30,5,-2]);
-ObjPostion[3] = new Float32Array([44,-5,2]);
-ObjPostion[4] = new Float32Array([60,-2,4]);
+ObjPostion[3] = new Float32Array([44,-5, -6]);
+ObjPostion[4] = new Float32Array([60,-2, 4]);
 ObjPostion[5] = new Float32Array([70,8,0]);
 
-ObjPostion[6] = new Float32Array([10,0,2]);
-ObjPostion[7] = new Float32Array([18,3,6]);
-ObjPostion[8] = new Float32Array([26,-5,-2]);
-ObjPostion[9] = new Float32Array([40,8,-4]);
-ObjPostion[10] = new Float32Array([50,-1,4]);
-ObjPostion[11] = new Float32Array([66,1,-8]);
+ObjPostion[6] = new Float32Array([10,0,-5]);
+ObjPostion[7] = new Float32Array([26,-5,3]);
+ObjPostion[8] = new Float32Array([40,8,-4]);
+ObjPostion[9] = new Float32Array([66,1,-1]);
 
-ObjPostion[12] = new Float32Array([-6,-4,0]);
+ObjPostion[12] = new Float32Array([-6,-4,5]);
 ObjPostion[13] = new Float32Array([24,6,-4]);
 ObjPostion[14] = new Float32Array([54,-3,4]);
 ObjPostion[15] = new Float32Array([74,4,2]);
 
 var transformx = 0.0;
 var transformy = 0.0;
+var locatex = 0.0;
+var locatey = 0.0;
+var PlaneAngle = 0.0;
+var FlySpeed = 0.1;
+
+var light_color = new Float32Array([1, 1, 1]);
+var light_location = new Float32Array([-5.5, 0, 10]);
+var light_ambient = new Float32Array([0.2, 0.2, 0.2]);
+var lightDir = 1;
 
 var gnear = 0, gfar = 10;
 var eyex = 0, eyey = 0, eyez = 4;

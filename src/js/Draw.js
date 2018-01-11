@@ -6,7 +6,38 @@ function animate() {
     angel = angel % 360;
     floorAngel += offset * 10 / 100;
     floorAngel = floorAngel % 360;
-    FlyDis += 0.1;
+    for (var i=0; i<16; i++) {
+      if (i == 10 || i == 11) continue;
+      ObjPostion[i][0] -= FlySpeed;
+      if (ObjPostion[i][0] < -40)
+        ObjPostion[i][0] = Math.random() * 20 + 20;
+    }
+
+    FlyDis += FlySpeed;
+
+    //paint the motion of the plane
+    if (isTPP) {
+      var disx = locatex  - transformx;
+      var disy = locatey - transformy;
+      transformx += disx / 8;
+      transformy += disy / 8;
+      PlaneAngel = disy * 20;
+    } else {
+      var disx = locatex - transformx;
+      var disy = locatey - transformy;
+      transformx += disx / 8;
+      transformy += disy / 8;
+      //PlaneAngel = disy * 20;
+    }
+    
+    
+    //change the light
+    if (lightDir == 1) 
+      light_location[0] += 0.05;
+    else light_location[0] -= 0.05;
+    if (light_location[0] > 10 || light_location[0] < -10)
+      lightDir = 1-lightDir;
+
 }
 
 var redraw = function() 
@@ -32,24 +63,14 @@ var redraw = function()
     }
     
     //cloud
-    drawObj(gl, CLOUDObjProgram, viewProjMatrix, model2, g_objDoc_CLOUD, g_drawingInfo_CLOUD, 0);
-    drawObj(gl, CLOUDObjProgram, viewProjMatrix, model2, g_objDoc_CLOUD, g_drawingInfo_CLOUD, 1);
-    drawObj(gl, CLOUDObjProgram, viewProjMatrix, model2, g_objDoc_CLOUD, g_drawingInfo_CLOUD, 2);
-    drawObj(gl, CLOUDObjProgram, viewProjMatrix, model2, g_objDoc_CLOUD, g_drawingInfo_CLOUD, 3);
-    drawObj(gl, CLOUDObjProgram, viewProjMatrix, model2, g_objDoc_CLOUD, g_drawingInfo_CLOUD, 4);
-    drawObj(gl, CLOUDObjProgram, viewProjMatrix, model2, g_objDoc_CLOUD, g_drawingInfo_CLOUD, 5);
+    for (var i=0; i<=5; i++)
+      drawObj(gl, CLOUDObjProgram, viewProjMatrix, model2, g_objDoc_CLOUD, g_drawingInfo_CLOUD, i);
 
-    drawObj(gl, SPHEREObjProgram, viewProjMatrix, model1, g_objDoc_SPHERE, g_drawingInfo_SPHERE, 6);
-    drawObj(gl, SPHEREObjProgram, viewProjMatrix, model1, g_objDoc_SPHERE, g_drawingInfo_SPHERE, 7);
-    drawObj(gl, SPHEREObjProgram, viewProjMatrix, model1, g_objDoc_SPHERE, g_drawingInfo_SPHERE, 8);
-    drawObj(gl, SPHEREObjProgram, viewProjMatrix, model1, g_objDoc_SPHERE, g_drawingInfo_SPHERE, 9);
-    drawObj(gl, SPHEREObjProgram, viewProjMatrix, model1, g_objDoc_SPHERE, g_drawingInfo_SPHERE, 10);
-    drawObj(gl, SPHEREObjProgram, viewProjMatrix, model1, g_objDoc_SPHERE, g_drawingInfo_SPHERE, 11);
-    
-    drawObj(gl, BOWIEObjProgram, viewProjMatrix, model3, g_objDoc_BOWIE, g_drawingInfo_BOWIE, 12);
-    drawObj(gl, BOWIEObjProgram, viewProjMatrix, model3, g_objDoc_BOWIE, g_drawingInfo_BOWIE, 13);
-    drawObj(gl, BOWIEObjProgram, viewProjMatrix, model3, g_objDoc_BOWIE, g_drawingInfo_BOWIE, 14);
-    drawObj(gl, BOWIEObjProgram, viewProjMatrix, model3, g_objDoc_BOWIE, g_drawingInfo_BOWIE, 15);
+    for (var i=6; i<=9; i++)
+      drawObj(gl, SPHEREObjProgram, viewProjMatrix, model1, g_objDoc_SPHERE, g_drawingInfo_SPHERE, i);
+
+    for (var i=12; i<=15; i++)
+      drawObj(gl, BOWIEObjProgram, viewProjMatrix, model3, g_objDoc_BOWIE, g_drawingInfo_BOWIE, i);
     
     drawPlaneCube(gl, PlaneProgram, cube_red, 0, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix);
     drawPlaneCube(gl, PlaneProgram, cube_red, 1, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix);
@@ -60,25 +81,23 @@ var redraw = function()
     drawPlaneCube(gl, PlaneProgram, cube_black, 6, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix);
     drawPlaneCube(gl, PlaneProgram, cube_black, 7, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix);
 
-    //
-    //
     requestAnimationFrame(redraw, canvas);
  }
  
- // 描画関数
+
 function drawObj(gl, program, viewProjMatrix, model, objDoc, drawingInfo, index) {
     gl.useProgram(program);
 
-    gl.uniform3f(program.u_LightColor, 1.0, 1.0, 1.0);
+    gl.uniform3f(program.u_LightColor, light_color[0], light_color[1], light_color[2]);
     //gl.uniform3f(program.u_LightPosition, 3.5, 0, 10);
-    gl.uniform3f(program.u_LightPosition, -5.5, 0, 10);
-    gl.uniform3f(program.u_AmbientLight, 0.2, 0.2, 0.2);
+    gl.uniform3f(program.u_LightPosition, light_location[0], light_location[1], light_location[2]);
+    gl.uniform3f(program.u_AmbientLight, light_ambient[0], light_ambient[1], light_ambient[2]);
 
     if (objDoc != null && objDoc.isMTLComplete()){ // OBJ and all MTLs are available
         drawingInfo = onReadComplete(gl, model, objDoc);
         objDoc = null;
     }
-    if (!drawingInfo) return;   // モデルを読み込み済みか判定
+    if (!drawingInfo) return;  
 
     initAttributeVariable(gl, program.a_Position, model.vertexBuffer); 
     initAttributeVariable(gl, program.a_Normal, model.normalBuffer);  
@@ -86,15 +105,10 @@ function drawObj(gl, program, viewProjMatrix, model, objDoc, drawingInfo, index)
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, model.indexBuffer);  
 
     var TempPos = ObjPostion[index]
-    var PosX = TempPos[0] - FlyDis
-    while (PosX < -40) {
-      PosX += 80
-    }
-    if (PosX < -20)
-        return;
-    g_modelMatrix.setTranslate(PosX, TempPos[1], TempPos[2]);
-    if (index == 6 || index == 7)
-      g_modelMatrix.rotate(angel, 0.0, 1.0, 0.0); // 適当に回転
+
+    g_modelMatrix.setTranslate(TempPos[0], TempPos[1], TempPos[2]);
+    if (index >=6 && index <= 9)
+      g_modelMatrix.rotate(angel, 0.0, 1.0, 0.0); 
     g_modelMatrix.rotate(90, 0,0,1);
     
 
@@ -115,11 +129,10 @@ function drawObj(gl, program, viewProjMatrix, model, objDoc, drawingInfo, index)
 function drawPlaneCube(gl, program, o, i, viewmatrix, modelmatrix, projmatrix, mvpmatrix, u_MvpMatrix , u_NormalMatrix) {
     gl.useProgram(program);   
 
-    gl.uniform3f(program.u_LightColor, 1.0, 1.0, 1.0);
+    gl.uniform3f(program.u_LightColor, light_color[0], light_color[1], light_color[2]);
     //gl.uniform3f(program.u_LightPosition, 3.5, 0, 10);
-    gl.uniform3f(program.u_LightPosition, -5.5, 0, 10);
-
-    gl.uniform3f(program.u_AmbientLight, 0.2, 0.2, 0.2);
+    gl.uniform3f(program.u_LightPosition, light_location[0], light_location[1], light_location[2]);
+    gl.uniform3f(program.u_AmbientLight, light_ambient[0], light_ambient[1], light_ambient[2]);
     
     initAttributeVariable(gl, program.a_Position, o.vertexBuffer); 
     initAttributeVariable(gl, program.a_Normal, o.normalBuffer);   
@@ -141,20 +154,22 @@ function drawCube(gl, program, o, index, viewmatrix, modelmatrix, projmatrix, mv
 
   //modelmatrix.setRotate(270, 0, 1, 0);
   var TempTransfer = translateDis[index];
-  if (index > 7) {
-    modelmatrix.setTranslate(TempTransfer[0], TempTransfer[1], TempTransfer[2]); 
-    modelmatrix.rotate(floorAngel, 0, 0, 1);
-    modelmatrix.translate(-TempTransfer[0], -TempTransfer[1], -TempTransfer[2]); 
+  
+
+  if (isTPP) {
+      modelmatrix.setTranslate(transformx, transformy, 0);
+      modelmatrix.rotate(PlaneAngel, 0, 0, 1);
+      modelmatrix.translate(TempTransfer[0] , TempTransfer[1] , TempTransfer[2] )
   }
-  else {
-    if (isTPP) {
-        modelmatrix.setTranslate(TempTransfer[0] + transformx, TempTransfer[1] + transformy, TempTransfer[2] );
-    }
-    else  {
-        modelmatrix.setTranslate(TempTransfer[0], TempTransfer[1] + transformy, TempTransfer[2] + transformx);
-    }
-    if (index == 6 || index == 7)
-    modelmatrix.rotate(angel, 1, 0, 0);
+  else  {
+      modelmatrix.setTranslate(0, transformy, transformx);
+      //modelmatrix.rotate(PlaneAngel, 0, 0, 1);
+      modelmatrix.translate(TempTransfer[0] , TempTransfer[1] , TempTransfer[2] )
+  }
+  
+  
+  if (index == 6 || index == 7) {
+      modelmatrix.rotate(angel, 1, 0, 0);
   }
 
   var TempScaleRatio = scaleRatio[index];

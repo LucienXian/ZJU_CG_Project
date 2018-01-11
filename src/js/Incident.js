@@ -53,8 +53,14 @@ function initEventHandlers(canvas, pilotAngle) {
       var x = ev.clientX, y = ev.clientY;
       var rect = ev.target.getBoundingClientRect() ;
 
-      transformx = ((x - rect.left) - canvas.width/2)/(canvas.width/2) * 10;
-      transformy = (canvas.height/2 - (y - rect.top))/(canvas.height/2) * 10;
+      if (isTPP) {
+          locatex = ((x - rect.left) - canvas.width/2)/(canvas.width/2) * 20;
+          locatey = (canvas.height/2 - (y - rect.top))/(canvas.height/2) * 10;
+      } else {
+          locatex = ((x - rect.left) - canvas.width/2)/(canvas.width/2) * 5;
+          locatey = (canvas.height/2 - (y - rect.top))/(canvas.height/2) * 4;
+      }
+      
     };
 }
 
@@ -68,17 +74,19 @@ function keydown(ev) {
     if (ev.keyCode == 37) {
       eyex -= 0.1;
     }
-    if (ev.keyCode == 65) {
+    if (ev.keyCode == 65) {  //a
       gnear -= 0.1;
     }
-    if (ev.keyCode == 68) {
+    if (ev.keyCode == 68) {   //d
       gnear += 0.1;
     }
-    if (ev.keyCode == 87) {
-      gfar += 0.1;
+    if (ev.keyCode == 87) {    //w
+       FlySpeed += 0.05;
+       console.log("speed" + FlySpeed);
     }
-    if (ev.keyCode == 83) {
-      gfar -= 0.1;
+    if (ev.keyCode == 83) {   //s
+       FlySpeed -= 0.05;
+       console.log("speed" + FlySpeed);
     }
 
   //draw(gl, n, index, viewmatrix, modelmatrix, projmatrix, mvpmatrix, u_MvpMatrix , u_NormalMatrix);

@@ -41,6 +41,6 @@ function main(){
     document.addEventListener('touchend', handleTouchEnd, false);
 
     resetGame();
-  //控制游戏结束
+    //控制游戏结束
     loop();
 }

@@ -57,7 +57,7 @@ function SPHEREObjInit()
       console.log('Failed to set the vertex information');
       return;
 	}
-	readSPHEREOBJFile('../../resources/2.obj', gl, model1, 0.2, true);
+	readSPHEREOBJFile('../../resources/2.obj', gl, model1, 0.13, true);
 }
 
 function CLOUDObjInit()
