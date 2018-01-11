@@ -6,6 +6,12 @@ var model2;
 var BOWIEObjProgram;
 var model3;
 
+
+var SkyProgram;//skybox program
+var imgs;//load texture image
+var imgs1;//other image
+var flag = 1;//switch maps
+
 var cube_white;
 var cube_red;
 var cube_black;
@@ -57,9 +63,10 @@ var PlaneAngle = 0.0;
 var FlySpeed = 0.1;
 
 var light_color = new Float32Array([1, 1, 1]);
-var light_location = new Float32Array([-5.5, 0, 10]);
+var light_location = new Float32Array([-5.5, 5, 10]);
 var light_ambient = new Float32Array([0.2, 0.2, 0.2]);
-var lightDir = 1;
+var lightDirX = 1;
+var lightDirZ = 1;
 
 var gnear = 0, gfar = 10;
 var eyex = 0, eyey = 0, eyez = 4;
@@ -181,3 +188,57 @@ var g_drawingInfo_SPHERE = null; // The information for drawing 3D model
 
 var g_objDoc_BOWIE = null;      // The information of OBJ file
 var g_drawingInfo_BOWIE = null; // The information for drawing 3D model
+
+
+
+
+var urls = [
+    '../../resources/mp_vr/rt.jpg',
+    '../../resources/mp_vr/lf.jpg',
+    '../../resources/mp_vr/up.jpg',
+    '../../resources/mp_vr/dn.jpg',
+    '../../resources/mp_vr/bk.jpg',
+    '../../resources/mp_vr/ft.jpg'
+  ];
+
+
+var urls1 = [
+    '../../resources/ame_nebula/rt.jpg',
+    '../../resources/ame_nebula/lf.jpg',
+    '../../resources/ame_nebula/up.jpg',
+    '../../resources/ame_nebula/dn.jpg',
+    '../../resources/ame_nebula/bk.jpg',
+    '../../resources/ame_nebula/ft.jpg'
+  ];
+
+var targets;
+
+  // Create a cube
+  //    v6----- v5
+  //   /|      /|
+  //  v1------v0|
+  //  | |     | |
+  //  | |v7---|-|v4
+  //  |/      |/
+  //  v2------v3
+var vertexSkybox = new Float32Array([
+      // Vertex coordinates and color
+       1.0,  1.0,  1.0,  // v0
+      -1.0,  1.0,  1.0,  // v1
+      -1.0, -1.0,  1.0,  // v2
+       1.0, -1.0,  1.0,  // v3
+       1.0, -1.0, -1.0,  // v4
+       1.0,  1.0, -1.0,  // v5
+      -1.0,  1.0, -1.0,  // v6
+      -1.0, -1.0, -1.0,  // v7
+    ]);
+
+// Indices of the vertices
+var skyboxIndex = new Uint16Array([
+      0, 3, 4,   0, 4, 5,    // right
+      1, 6, 7,   1, 7, 2,    // left
+      0, 5, 6,   0, 6, 1,    // up
+      7, 4, 3,   7, 3, 2,    // down
+      4, 7, 6,   4, 6, 5,    // back
+      0, 1, 2,   0, 2, 3     // front
+  ]);

@@ -6,12 +6,12 @@ function animate() {
     angel = angel % 360;
     floorAngel += offset * 10 / 100;
     floorAngel = floorAngel % 360;
-    for (var i=0; i<16; i++) {
+    /*for (var i=0; i<16; i++) {
       if (i == 10 || i == 11) continue;
       ObjPostion[i][0] -= FlySpeed;
       if (ObjPostion[i][0] < -40)
-        ObjPostion[i][0] = Math.random() * 20 + 20;
-    }
+        ObjPostion[i][0] = Math.random() * 30 + 30;
+    }*/
 
     FlyDis += FlySpeed;
 
@@ -29,14 +29,31 @@ function animate() {
       transformy += disy / 8;
       //PlaneAngel = disy * 20;
     }
-    
-    
     //change the light
-    if (lightDir == 1) 
+    if (lightDirX == 1) 
       light_location[0] += 0.05;
-    else light_location[0] -= 0.05;
-    if (light_location[0] > 10 || light_location[0] < -10)
-      lightDir = 1-lightDir;
+    else if (lightDirX == -1)
+      light_location[0] -= 0.05;
+
+    if (lightDirZ == 1 && lightDirX == 0)
+      light_location[2] += 0.1;
+    else if (lightDirZ == -1 && lightDirX == 0)
+      light_location[2] -= 0.1;
+
+    if (light_location[0] >= 10)
+      lightDirX = -1;
+    else if (light_location[0] <= -5.5 && lightDirX != 0 ) {
+      lightDirX = 0;
+      lightDirZ = 0 - lightDirZ;
+    }
+    else if (light_location[2] <= -10  && lightDirX == 0) {
+      lightDirZ = 0 - lightDirZ;
+    }
+    else if (light_location[2] >= 10  && lightDirX == 0) {
+      lightDirX = 1;
+    }
+    
+    //console.log(light_location[0] + "    " + light_location[2] + "    " + lightDirX + "   " + lightDirZ)
 
 }
 
@@ -47,19 +64,21 @@ var redraw = function()
     gl.flush();
 
     if (isTPP == 1) {
-        viewmatrix.setLookAt(3, 0, 10, 0, 0, -1, 0, 1, 0);
-        projmatrix.setOrtho(-20, 20, -10, 10, -10, 20);
-
-        viewProjMatrix.setOrtho(-20, 20, -10, 10, -10, 20);
-        viewProjMatrix.lookAt(3.0, 0.0, 10.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0);
-        
-    }
-    else {
-        viewmatrix.setLookAt(-3, 1, 0, 1, 0, 0, 0, 1, 0);
+        viewmatrix.setLookAt(FlyDis , 0, 10, FlyDis, 0, 0, 0, 1, 0);
+        //projmatrix.setOrtho(-20, 20, -10, 10, -10, 20);
         projmatrix.setPerspective(60.0, canvas.width/canvas.height, 1.0, 100.0);
 
         viewProjMatrix.setPerspective(60.0, canvas.width/canvas.height, 1.0, 100.0);
-        viewProjMatrix.lookAt(-3, 1, 0, 1, 0, 0, 0, 1, 0);
+        //viewProjMatrix.setOrtho(-20, 20, -10, 10, -10, 20);
+        viewProjMatrix.lookAt(FlyDis , 0.0, 10.0, FlyDis, 0.0, 0.0, 0.0, 1.0, 0.0);
+        
+    }
+    else {
+        viewmatrix.setLookAt(-0.5, (transformy+1) * 10, transformx * 10, 1, transformy+1, transformx, 0, 1, 0);
+        projmatrix.setPerspective(60.0, canvas.width/canvas.height, 1.0, 100.0);
+
+        viewProjMatrix.setPerspective(60.0, canvas.width/canvas.height, 1.0, 100.0);
+        viewProjMatrix.lookAt(-0.5, (transformy+1) * 10, transformx * 10, 1, transformy+1, transformx, 0, 1, 0);
     }
     
     //cloud
@@ -80,6 +99,11 @@ var redraw = function()
     drawPlaneCube(gl, PlaneProgram, cube_black, 5, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix);
     drawPlaneCube(gl, PlaneProgram, cube_black, 6, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix);
     drawPlaneCube(gl, PlaneProgram, cube_black, 7, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix);
+
+    if (flag > 0)
+      drawSkybox(gl, SkyProgram, projmatrix, viewmatrix, imgs);
+    else
+      drawSkybox(gl, SkyProgram, projmatrix, viewmatrix, imgs1);
 
     requestAnimationFrame(redraw, canvas);
  }
@@ -157,12 +181,12 @@ function drawCube(gl, program, o, index, viewmatrix, modelmatrix, projmatrix, mv
   
 
   if (isTPP) {
-      modelmatrix.setTranslate(transformx, transformy, 0);
+      modelmatrix.setTranslate(transformx +FlyDis, transformy, 0);
       modelmatrix.rotate(PlaneAngel, 0, 0, 1);
-      modelmatrix.translate(TempTransfer[0] , TempTransfer[1] , TempTransfer[2] )
+      modelmatrix.translate(TempTransfer[0]  , TempTransfer[1] , TempTransfer[2] )
   }
   else  {
-      modelmatrix.setTranslate(0, transformy, transformx);
+      modelmatrix.setTranslate(FlyDis, transformy, transformx);
       //modelmatrix.rotate(PlaneAngel, 0, 0, 1);
       modelmatrix.translate(TempTransfer[0] , TempTransfer[1] , TempTransfer[2] )
   }
@@ -218,4 +242,55 @@ function onReadComplete(gl, model, objDoc) {
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
   return drawingInfo;
+}
+
+
+
+function drawSkybox(gl, SkyProgram, projMatrix, viewmatrix, imgs){
+  
+  //传递参数
+  gl.useProgram(SkyProgram);
+
+  gl.uniformMatrix4fv(SkyProgram.u_ViewMatrix, false, viewmatrix.elements);
+  gl.uniformMatrix4fv(SkyProgram.u_ProjMatrix, false, projMatrix.elements);
+
+  var vertexSkyBuffer = gl.createBuffer();
+  if (!vertexSkyBuffer) {
+    console.log('Failed to create the buffer object vertexSkyBuffer');
+    return;
+  }
+
+  //顶点属性
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexSkyBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, vertexSkybox, gl.STATIC_DRAW);
+  var skybox_FSIZE = vertexSkybox.BYTES_PER_ELEMENT;
+  gl.vertexAttribPointer(SkyProgram.a_Position, 3, gl.FLOAT, false, skybox_FSIZE*3, 0);
+  gl.enableVertexAttribArray(SkyProgram.a_Position);
+
+  //索引属性
+  var indexSkyboxBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexSkyboxBuffer);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, skyboxIndex, gl.STATIC_DRAW);
+  skybox_IINDEX = skyboxIndex.length;
+  skybox_IFSIZE = skyboxIndex.BYTES_PER_ELEMENT;
+
+  //纹理创建
+  var texture = gl.createTexture();
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+
+  //创建六张纹理
+  for (var i = 0; i < 6; i++) {
+    gl.texImage2D(targets[i], 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, imgs[i]);    
+  }
+
+  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+  gl.uniform1i(SkyProgram.u_SkyTexMap, 0);
+  gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.drawElements(gl.TRIANGLES, skybox_IINDEX, gl.UNSIGNED_SHORT, skybox_IFSIZE * 0);
 }

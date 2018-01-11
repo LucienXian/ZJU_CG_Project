@@ -57,8 +57,8 @@ function initEventHandlers(canvas, pilotAngle) {
           locatex = ((x - rect.left) - canvas.width/2)/(canvas.width/2) * 20;
           locatey = (canvas.height/2 - (y - rect.top))/(canvas.height/2) * 10;
       } else {
-          locatex = ((x - rect.left) - canvas.width/2)/(canvas.width/2) * 5;
-          locatey = (canvas.height/2 - (y - rect.top))/(canvas.height/2) * 4;
+          locatex = ((x - rect.left) - canvas.width/2)/(canvas.width/2) * 15;
+          locatey = (canvas.height/2 - (y - rect.top))/(canvas.height/2) * 10;
       }
       
     };
@@ -87,6 +87,10 @@ function keydown(ev) {
     if (ev.keyCode == 83) {   //s
        FlySpeed -= 0.05;
        console.log("speed" + FlySpeed);
+    }
+    if (ev.keyCode == 84) {
+       flag = -flag;
+       console.log("switch")
     }
 
   //draw(gl, n, index, viewmatrix, modelmatrix, projmatrix, mvpmatrix, u_MvpMatrix , u_NormalMatrix);

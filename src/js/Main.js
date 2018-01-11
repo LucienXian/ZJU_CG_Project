@@ -14,9 +14,21 @@ function main(){
 		return;
 	}
 
+
+    targets = [
+        gl.TEXTURE_CUBE_MAP_POSITIVE_X,
+        gl.TEXTURE_CUBE_MAP_NEGATIVE_X, 
+        gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
+        gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
+        gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
+        gl.TEXTURE_CUBE_MAP_NEGATIVE_Z
+    ];
+
 	gl.clearColor(0, 0, 0, 1);
 	gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LEQUAL);
 
+    initSkybox();
 	PlaneInit();
 	SPHEREObjInit();
 	CLOUDObjInit();

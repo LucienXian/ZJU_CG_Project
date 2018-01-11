@@ -324,3 +324,53 @@ function initAttributeVariable(gl, a_attribute, buffer) {
   gl.vertexAttribPointer(a_attribute, buffer.num, buffer.type, false, 0, 0);
   gl.enableVertexAttribArray(a_attribute);
 }
+
+
+
+//初始化天空盒
+function initSkybox(){
+  SkyProgram = createProgram(gl, SKY_VERTEX_SHADER, SKY_FRAGMENT_SHADER);
+  console.log('xxx');
+  if (!SkyProgram)
+  {
+    console.log('Failed to intialize skybox shaders.');
+    return;
+  }
+
+  var nimgs = 0;
+  imgs = new Array(6);
+  imgs1 = new Array(6);
+  for (var i = 0; i < 6; i++) {
+    imgs[i] = new Image();
+    imgs1[i] = new Image();
+    imgs1[i].onload = function(){console.log("load texture")}
+    imgs[i].onload = function(){
+      nimgs++;
+      if (nimgs==6){
+        skyboxMapping();
+      }
+    }
+
+    imgs[i].src = urls[i];
+    imgs1[i].src = urls1[i];
+  }
+}
+
+function skyboxMapping(){
+  
+  SkyProgram.a_Position = gl.getAttribLocation(SkyProgram, 
+    "a_Position");
+  SkyProgram.u_ViewMatrix = gl.getUniformLocation(SkyProgram, 
+    "u_ViewMatrix");
+  SkyProgram.u_ProjMatrix = gl.getUniformLocation(SkyProgram,
+    "u_ProjMatrix");
+  SkyProgram.u_SkyTexMap = gl.getUniformLocation(SkyProgram, 
+    "u_SkyTexMap");
+
+  if(SkyProgram.a_Position<0 || !SkyProgram.u_ViewMatrix || 
+    !SkyProgram.u_ProjMatrix || !SkyProgram.u_SkyTexMap)
+  {
+    console.log("Failed to get store location from progrom");
+    return;
+  }
+}
