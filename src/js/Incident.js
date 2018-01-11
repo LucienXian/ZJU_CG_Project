@@ -57,7 +57,7 @@ function initEventHandlers(canvas, pilotAngle) {
           locatex = ((x - rect.left) - canvas.width/2)/(canvas.width/2) * 20;
           locatey = (canvas.height/2 - (y - rect.top))/(canvas.height/2) * 10;
       } else {
-          locatex = ((x - rect.left) - canvas.width/2)/(canvas.width/2) * 15;
+          locatez = ((x - rect.left) - canvas.width/2)/(canvas.width/2) * 15;
           locatey = (canvas.height/2 - (y - rect.top))/(canvas.height/2) * 10;
       }
       
@@ -74,18 +74,20 @@ function keydown(ev) {
     if (ev.keyCode == 37) {
       eyex -= 0.1;
     }
-    if (ev.keyCode == 65) {  //a
-      gnear -= 0.1;
+    if (ev.keyCode == 87) {  //w
+      locatez -= 0.5;
     }
-    if (ev.keyCode == 68) {   //d
-      gnear += 0.1;
+    if (ev.keyCode == 83) {   //s
+      locatez += 0.5;
     }
-    if (ev.keyCode == 87) {    //w
+    if (ev.keyCode == 38) {    //up
        FlySpeed += 0.05;
        console.log("speed" + FlySpeed);
     }
-    if (ev.keyCode == 83) {   //s
+    if (ev.keyCode == 40) {   //down
        FlySpeed -= 0.05;
+       if (FlySpeed <= 0)
+          FlySpeed = 0;
        console.log("speed" + FlySpeed);
     }
     if (ev.keyCode == 84) {

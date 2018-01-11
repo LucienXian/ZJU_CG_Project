@@ -6,28 +6,28 @@ function animate() {
     angel = angel % 360;
     floorAngel += offset * 10 / 100;
     floorAngel = floorAngel % 360;
-    /*for (var i=0; i<16; i++) {
-      if (i == 10 || i == 11) continue;
-      ObjPostion[i][0] -= FlySpeed;
-      if (ObjPostion[i][0] < -40)
-        ObjPostion[i][0] = Math.random() * 30 + 30;
-    }*/
 
     FlyDis += FlySpeed;
+
+    for(var i=0; i<18; i++) {
+      if (ObjPostion[i][0] < FlyDis - 20)
+        ObjPostion[i][0] += Math.random() * 20 + 80
+    }
 
     //paint the motion of the plane
     if (isTPP) {
       var disx = locatex  - transformx;
       var disy = locatey - transformy;
+      var disz = locatez - transformz;
       transformx += disx / 8;
       transformy += disy / 8;
+      transformz += disz / 8;
       PlaneAngel = disy * 20;
     } else {
-      var disx = locatex - transformx;
+      var disz = locatez - transformz;
       var disy = locatey - transformy;
-      transformx += disx / 8;
+      transformz += disz / 8;
       transformy += disy / 8;
-      //PlaneAngel = disy * 20;
     }
     //change the light
     if (lightDirX == 1) 
@@ -65,30 +65,32 @@ var redraw = function()
 
     if (isTPP == 1) {
         viewmatrix.setLookAt(FlyDis , 0, 10, FlyDis, 0, 0, 0, 1, 0);
-        //projmatrix.setOrtho(-20, 20, -10, 10, -10, 20);
         projmatrix.setPerspective(60.0, canvas.width/canvas.height, 1.0, 100.0);
 
         viewProjMatrix.setPerspective(60.0, canvas.width/canvas.height, 1.0, 100.0);
-        //viewProjMatrix.setOrtho(-20, 20, -10, 10, -10, 20);
         viewProjMatrix.lookAt(FlyDis , 0.0, 10.0, FlyDis, 0.0, 0.0, 0.0, 1.0, 0.0);
+
+        skyviewmatrix.setLookAt(0 , 0, 10, FlyDis, 0, -2000, 0, 1, 0);
         
     }
     else {
-        viewmatrix.setLookAt(-0.5, (transformy+1) * 10, transformx * 10, 1, transformy+1, transformx, 0, 1, 0);
+        viewmatrix.setLookAt(-0.5 + FlyDis + transformx, transformy+1.1, transformz, FlyDis + transformx, transformy+1.1, transformz, 0, 1, 0);
         projmatrix.setPerspective(60.0, canvas.width/canvas.height, 1.0, 100.0);
 
         viewProjMatrix.setPerspective(60.0, canvas.width/canvas.height, 1.0, 100.0);
-        viewProjMatrix.lookAt(-0.5, (transformy+1) * 10, transformx * 10, 1, transformy+1, transformx, 0, 1, 0);
+        viewProjMatrix.lookAt(-0.5 + FlyDis + transformx, transformy+ 1.1, transformz, FlyDis + transformx, transformy+1.1, transformz, 0, 1, 0);
+
+        skyviewmatrix.setLookAt(-500 + FlyDis , transformy+1.1, transformx, FlyDis, 0, 0, 0, 1, 0);
     }
     
     //cloud
-    for (var i=0; i<=5; i++)
+    for (var i=0; i<6; i++)
       drawObj(gl, CLOUDObjProgram, viewProjMatrix, model2, g_objDoc_CLOUD, g_drawingInfo_CLOUD, i);
 
-    for (var i=6; i<=9; i++)
+    for (var i=6; i<12; i++)
       drawObj(gl, SPHEREObjProgram, viewProjMatrix, model1, g_objDoc_SPHERE, g_drawingInfo_SPHERE, i);
 
-    for (var i=12; i<=15; i++)
+    for (var i=12; i<18; i++)
       drawObj(gl, BOWIEObjProgram, viewProjMatrix, model3, g_objDoc_BOWIE, g_drawingInfo_BOWIE, i);
     
     drawPlaneCube(gl, PlaneProgram, cube_red, 0, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix);
@@ -112,9 +114,10 @@ var redraw = function()
 function drawObj(gl, program, viewProjMatrix, model, objDoc, drawingInfo, index) {
     gl.useProgram(program);
 
-    gl.uniform3f(program.u_LightColor, light_color[0], light_color[1], light_color[2]);
+    gl.uniform3f(program.u_LightColor, light_color[0] , light_color[1], light_color[2]);
     //gl.uniform3f(program.u_LightPosition, 3.5, 0, 10);
-    gl.uniform3f(program.u_LightPosition, light_location[0], light_location[1], light_location[2]);
+    gl.uniform3f(program.u_LightPosition, light_location[0] , light_location[1], light_location[2]);
+    console.log("Light:" + FlyDis)
     gl.uniform3f(program.u_AmbientLight, light_ambient[0], light_ambient[1], light_ambient[2]);
 
     if (objDoc != null && objDoc.isMTLComplete()){ // OBJ and all MTLs are available
@@ -131,6 +134,7 @@ function drawObj(gl, program, viewProjMatrix, model, objDoc, drawingInfo, index)
     var TempPos = ObjPostion[index]
 
     g_modelMatrix.setTranslate(TempPos[0], TempPos[1], TempPos[2]);
+    console.log("cube:" +TempPos[0])
     if (index >=6 && index <= 9)
       g_modelMatrix.rotate(angel, 0.0, 1.0, 0.0); 
     g_modelMatrix.rotate(90, 0,0,1);
@@ -153,9 +157,9 @@ function drawObj(gl, program, viewProjMatrix, model, objDoc, drawingInfo, index)
 function drawPlaneCube(gl, program, o, i, viewmatrix, modelmatrix, projmatrix, mvpmatrix, u_MvpMatrix , u_NormalMatrix) {
     gl.useProgram(program);   
 
-    gl.uniform3f(program.u_LightColor, light_color[0], light_color[1], light_color[2]);
+    gl.uniform3f(program.u_LightColor, light_color[0] , light_color[1], light_color[2]);
     //gl.uniform3f(program.u_LightPosition, 3.5, 0, 10);
-    gl.uniform3f(program.u_LightPosition, light_location[0], light_location[1], light_location[2]);
+    gl.uniform3f(program.u_LightPosition, light_location[0] + FlyDis, light_location[1], light_location[2]);
     gl.uniform3f(program.u_AmbientLight, light_ambient[0], light_ambient[1], light_ambient[2]);
     
     initAttributeVariable(gl, program.a_Position, o.vertexBuffer); 
@@ -181,12 +185,12 @@ function drawCube(gl, program, o, index, viewmatrix, modelmatrix, projmatrix, mv
   
 
   if (isTPP) {
-      modelmatrix.setTranslate(transformx +FlyDis, transformy, 0);
+      modelmatrix.setTranslate(transformx +FlyDis, transformy, transformz);
       modelmatrix.rotate(PlaneAngel, 0, 0, 1);
       modelmatrix.translate(TempTransfer[0]  , TempTransfer[1] , TempTransfer[2] )
   }
   else  {
-      modelmatrix.setTranslate(FlyDis, transformy, transformx);
+      modelmatrix.setTranslate(FlyDis + transformx, transformy, transformz);
       //modelmatrix.rotate(PlaneAngel, 0, 0, 1);
       modelmatrix.translate(TempTransfer[0] , TempTransfer[1] , TempTransfer[2] )
   }
@@ -251,7 +255,7 @@ function drawSkybox(gl, SkyProgram, projMatrix, viewmatrix, imgs){
   //传递参数
   gl.useProgram(SkyProgram);
 
-  gl.uniformMatrix4fv(SkyProgram.u_ViewMatrix, false, viewmatrix.elements);
+  gl.uniformMatrix4fv(SkyProgram.u_ViewMatrix, false, skyviewmatrix.elements);
   gl.uniformMatrix4fv(SkyProgram.u_ProjMatrix, false, projMatrix.elements);
 
   var vertexSkyBuffer = gl.createBuffer();

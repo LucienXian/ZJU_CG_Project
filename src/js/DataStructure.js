@@ -17,6 +17,7 @@ var cube_red;
 var cube_black;
 
 var viewmatrix = new Matrix4();
+var skyviewmatrix = new Matrix4();
 var modelmatrix = new Matrix4();
 var projmatrix = new Matrix4();
 var mvpmatrix = new Matrix4();
@@ -38,27 +39,35 @@ var g_normalMatrix = new Matrix4();
 
 
 var ObjPostion = new Array(20);
-ObjPostion[0] = new Float32Array([6,7,6]);
-ObjPostion[1] = new Float32Array([20,-3,-4]);
-ObjPostion[2] = new Float32Array([30,5,-2]);
-ObjPostion[3] = new Float32Array([44,-5, -6]);
-ObjPostion[4] = new Float32Array([60,-2, 4]);
+ObjPostion[0] = new Float32Array([2,7,12]);
+ObjPostion[1] = new Float32Array([11,-3,-8]);
+ObjPostion[2] = new Float32Array([29,-5, -12]);
+ObjPostion[3] = new Float32Array([36,1,-4]);
+ObjPostion[4] = new Float32Array([60,-2, 8]);
 ObjPostion[5] = new Float32Array([70,8,0]);
 
-ObjPostion[6] = new Float32Array([10,0,-5]);
-ObjPostion[7] = new Float32Array([26,-5,3]);
-ObjPostion[8] = new Float32Array([40,8,-4]);
-ObjPostion[9] = new Float32Array([66,1,-1]);
+ObjPostion[6] = new Float32Array([6,0,-10]);
+ObjPostion[7] = new Float32Array([17,-5,6]);
+ObjPostion[8] = new Float32Array([34,1,-1]);
+ObjPostion[9] = new Float32Array([46,0,9]);
+ObjPostion[10] = new Float32Array([55,-5,-5]);
+ObjPostion[11] = new Float32Array([74,1,2]);
 
-ObjPostion[12] = new Float32Array([-6,-4,5]);
-ObjPostion[13] = new Float32Array([24,6,-4]);
-ObjPostion[14] = new Float32Array([54,-3,4]);
-ObjPostion[15] = new Float32Array([74,4,2]);
+ObjPostion[12] = new Float32Array([-6,-4,11]);
+ObjPostion[13] = new Float32Array([23,-3,15]);
+ObjPostion[14] = new Float32Array([41,4,3]);
+ObjPostion[15] = new Float32Array([51,-4,6]);
+ObjPostion[16] = new Float32Array([72,-3,-13]);
+ObjPostion[17] = new Float32Array([80,2,0]);
 
 var transformx = 0.0;
 var transformy = 0.0;
+var transformz = 0.0;
+
 var locatex = 0.0;
 var locatey = 0.0;
+var locatez = 0.0;
+
 var PlaneAngle = 0.0;
 var FlySpeed = 0.1;
 
@@ -80,8 +89,8 @@ scaleRatio[2] = new Float32Array([0.4, 0.1, 0.4]);
 scaleRatio[3] = new Float32Array([0.15, 0.5, 0.5]);
 scaleRatio[4] = new Float32Array([0.15, 0.2, 0.2]);
 scaleRatio[5] = new Float32Array([0.075, 0.1, 0.1]);
-scaleRatio[6] = new Float32Array([0.025, 0.7, 0.1]);
-scaleRatio[7] = new Float32Array([0.025, 0.1, 0.7]);
+scaleRatio[6] = new Float32Array([0.025, 0.85, 0.1]);
+scaleRatio[7] = new Float32Array([0.025, 0.1, 0.85]);
 
 
 
