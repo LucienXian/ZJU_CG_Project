@@ -25,7 +25,7 @@
 .message--instructions {
 	font-family: 'Playfair Display';
 	font-size: 0.85em;
-	bottom: 8vh;
+	bottom: 0vh;
 	letter-spacing: 0.2em;
 	color: #68c3c0;
 }
@@ -62,13 +62,27 @@
 
 .meta a {
 	display: block;
-	padding: 1em 1.35em;
+	padding: 0.5em 1.35em;
 	border: 1px solid #d1b790;
 	border-top: 0;
 }
 
 .meta a:not(:last-child) {
 	border-right: 0;
+}
+
+.demo-link {
+	font-family: 'Playfair Display';
+	font-weight: bold;
+	text-align: center;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: #bba077;
+	bottom: 0vh;
+}
+
+.demo-link--current {
+	color: #bba077;
 }
 
 .score {
@@ -112,4 +126,39 @@
 
 .score__value--dist {
 	font-size: 30px;
+}
+
+.partisan {
+
+	position: absolute; bottom: 0; left: 0; width: 38em;
+	padding: 4.5em 7.5em 1.5em 5.5em;
+}
+.part {
+	font-size: 0.75em;
+	line-height: 1;
+	position: absolute;
+	top: 6em;
+	left: 1em;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-wrap: wrap;
+	flex-wrap: wrap;
+	white-space: nowrap;
+	border-top: 1px solid #d1b790;
+}
+.part a {
+	display: block;
+	padding: 0.5em 1.35em;
+	border: 1px solid #d1b790;
+	border-top: 0;
+}
+.down{
+	font-family: 'Playfair Display';
+	font-weight: bold;
+	text-align: center;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: #bba077;
+	bottom: 0vh;
+
 }
