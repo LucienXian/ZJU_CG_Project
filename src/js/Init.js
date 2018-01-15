@@ -330,7 +330,6 @@ function initAttributeVariable(gl, a_attribute, buffer) {
 //初始化天空盒
 function initSkybox(){
   SkyProgram = createProgram(gl, SKY_VERTEX_SHADER, SKY_FRAGMENT_SHADER);
-  console.log('xxx');
   if (!SkyProgram)
   {
     console.log('Failed to intialize skybox shaders.');
@@ -373,4 +372,59 @@ function skyboxMapping(){
     console.log("Failed to get store location from progrom");
     return;
   }
+  vertexSkyBuffer = gl.createBuffer();
+  if (!vertexSkyBuffer) {
+    console.log('Failed to create the buffer object vertexSkyBuffer');
+    return;
+  }
+
+  //索引属性
+  indexSkyboxBuffer = gl.createBuffer();
+  if (!indexSkyboxBuffer) {
+    console.log('Failed to create the buffer object indexSkyboxBuffer');
+    return;
+  }
+
+  createSkyboxTex(0);
+  createSkyboxTex(1);
+}
+
+function createSkyboxTex(i){
+  //gl.useProgram(SkyProgram);
+
+  if (i==0){
+    texture0 = gl.createTexture();
+    //gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture0);
+
+    //创建六张纹理
+    for (var i = 0; i < 6; i++) {
+      gl.texImage2D(targets[i], 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, imgs[i]);    
+    }
+
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+    //gl.uniform1i(SkyProgram.u_SkyTexMap, 0);
+  }
+  else{
+    texture1 = gl.createTexture();
+    //gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture1);
+
+    //创建六张纹理
+    for (var i = 0; i < 6; i++) {
+      gl.texImage2D(targets[i], 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, imgs1[i]);    
+    }
+
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+    //gl.uniform1i(SkyProgram.u_SkyTexMap, 1);
+  }
+
 }

@@ -103,9 +103,9 @@ var redraw = function()
     drawPlaneCube(gl, PlaneProgram, cube_black, 7, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix);
 
     if (flag > 0)
-      drawSkybox(gl, SkyProgram, projmatrix, viewmatrix, imgs);
+      drawSkybox(gl, SkyProgram, projmatrix, viewmatrix, texture0, 0);
     else
-      drawSkybox(gl, SkyProgram, projmatrix, viewmatrix, imgs1);
+      drawSkybox(gl, SkyProgram, projmatrix, viewmatrix, texture1, 1);
 
     requestAnimationFrame(redraw, canvas);
  }
@@ -248,8 +248,37 @@ function onReadComplete(gl, model, objDoc) {
   return drawingInfo;
 }
 
+function drawSkybox(gl, SkyProgram, projMatrix, viewmatrix, texture, i){
+  gl.useProgram(SkyProgram);
 
+  gl.uniformMatrix4fv(SkyProgram.u_ViewMatrix, false, skyviewmatrix.elements);
+  gl.uniformMatrix4fv(SkyProgram.u_ProjMatrix, false, projMatrix.elements);
 
+  //顶点属性
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexSkyBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, vertexSkybox, gl.STATIC_DRAW);
+  var skybox_FSIZE = vertexSkybox.BYTES_PER_ELEMENT;
+  gl.vertexAttribPointer(SkyProgram.a_Position, 3, gl.FLOAT, false, skybox_FSIZE*3, 0);
+  gl.enableVertexAttribArray(SkyProgram.a_Position);
+
+  //索引属性
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexSkyboxBuffer);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, skyboxIndex, gl.STATIC_DRAW);
+
+  
+  gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+  if (i==0){
+    gl.uniform1i(SkyProgram.u_SkyTexMap, 0);
+    gl.activeTexture(gl.TEXTURE0);
+  }
+  else{
+    gl.uniform1i(SkyProgram.u_SkyTexMap, 0);
+    gl.activeTexture(gl.TEXTURE1);
+  }
+  gl.drawElements(gl.TRIANGLES, skyboxIndex.length, gl.UNSIGNED_SHORT,skyboxIndex.BYTES_PER_ELEMENT * 0);
+}
+
+/*
 function drawSkybox(gl, SkyProgram, projMatrix, viewmatrix, imgs){
   
   //传递参数
@@ -263,20 +292,6 @@ function drawSkybox(gl, SkyProgram, projMatrix, viewmatrix, imgs){
     console.log('Failed to create the buffer object vertexSkyBuffer');
     return;
   }
-
-  //顶点属性
-  gl.bindBuffer(gl.ARRAY_BUFFER, vertexSkyBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, vertexSkybox, gl.STATIC_DRAW);
-  var skybox_FSIZE = vertexSkybox.BYTES_PER_ELEMENT;
-  gl.vertexAttribPointer(SkyProgram.a_Position, 3, gl.FLOAT, false, skybox_FSIZE*3, 0);
-  gl.enableVertexAttribArray(SkyProgram.a_Position);
-
-  //索引属性
-  var indexSkyboxBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexSkyboxBuffer);
-  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, skyboxIndex, gl.STATIC_DRAW);
-  skybox_IINDEX = skyboxIndex.length;
-  skybox_IFSIZE = skyboxIndex.BYTES_PER_ELEMENT;
 
   //纹理创建
   var texture = gl.createTexture();
@@ -298,3 +313,5 @@ function drawSkybox(gl, SkyProgram, projMatrix, viewmatrix, imgs){
   gl.activeTexture(gl.TEXTURE0);
   gl.drawElements(gl.TRIANGLES, skybox_IINDEX, gl.UNSIGNED_SHORT, skybox_IFSIZE * 0);
 }
+*/
+

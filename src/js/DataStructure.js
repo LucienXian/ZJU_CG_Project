@@ -12,6 +12,12 @@ var imgs;//load texture image
 var imgs1;//other image
 var flag = 1;//switch maps
 
+var texture0;
+var texture1;
+
+var vertexSkyBuffer;
+var indexSkyboxBuffer;
+
 var cube_white;
 var cube_red;
 var cube_black;
@@ -202,12 +208,12 @@ var g_drawingInfo_BOWIE = null; // The information for drawing 3D model
 
 
 var urls = [
-    '../../resources/mp_vr/rt.jpg',
-    '../../resources/mp_vr/lf.jpg',
-    '../../resources/mp_vr/up.jpg',
-    '../../resources/mp_vr/dn.jpg',
-    '../../resources/mp_vr/bk.jpg',
-    '../../resources/mp_vr/ft.jpg'
+    '../../resources/cloud/rt.jpg',
+    '../../resources/cloud/lf.jpg',
+    '../../resources/cloud/up.jpg',
+    '../../resources/cloud/dn.jpg',
+    '../../resources/cloud/bk.jpg',
+    '../../resources/cloud/ft.jpg'
   ];
 
 
