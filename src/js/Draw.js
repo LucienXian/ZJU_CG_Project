@@ -2,8 +2,8 @@ function animate() {
     var time_now = Date.now();
     var offset = time_now - time_last;
     time_last = time_now;
-    angel += offset * 20 / 100;
-    angel = angel % 360;
+    angle += offset * 20 / 100;
+    angle = angle % 360;
     floorAngel += offset * 10 / 100;
     floorAngel = floorAngel % 360;
 
@@ -63,7 +63,7 @@ var redraw = function()
     animate();
     gl.flush();
 
-    if (isTPP == 1) {
+    if (isTPP == true) {
         viewmatrix.setLookAt(FlyDis , 0, 10, FlyDis, 0, 0, 0, 1, 0);
         projmatrix.setPerspective(60.0, canvas.width/canvas.height, 1.0, 100.0);
 
@@ -107,7 +107,14 @@ var redraw = function()
     else
       drawSkybox(gl, SkyProgram, projmatrix, viewmatrix, texture1, 1);
 
-    requestAnimationFrame(redraw, canvas);
+	if(isCollision())
+	{
+		game.status = "gameover";
+		console.log("Collision!");
+	}
+	
+	if (game.status == "playing")
+		requestAnimationFrame(redraw, canvas);
  }
  
 
@@ -117,7 +124,6 @@ function drawObj(gl, program, viewProjMatrix, model, objDoc, drawingInfo, index)
     gl.uniform3f(program.u_LightColor, light_color[0] , light_color[1], light_color[2]);
     //gl.uniform3f(program.u_LightPosition, 3.5, 0, 10);
     gl.uniform3f(program.u_LightPosition, light_location[0] , light_location[1], light_location[2]);
-    console.log("Light:" + FlyDis)
     gl.uniform3f(program.u_AmbientLight, light_ambient[0], light_ambient[1], light_ambient[2]);
 
     if (objDoc != null && objDoc.isMTLComplete()){ // OBJ and all MTLs are available
@@ -134,9 +140,8 @@ function drawObj(gl, program, viewProjMatrix, model, objDoc, drawingInfo, index)
     var TempPos = ObjPostion[index]
 
     g_modelMatrix.setTranslate(TempPos[0], TempPos[1], TempPos[2]);
-    console.log("cube:" +TempPos[0])
     if (index >=6 && index <= 9)
-      g_modelMatrix.rotate(angel, 0.0, 1.0, 0.0); 
+      g_modelMatrix.rotate(angle, 0.0, 1.0, 0.0); 
     g_modelMatrix.rotate(90, 0,0,1);
     
 
@@ -197,13 +202,13 @@ function drawCube(gl, program, o, index, viewmatrix, modelmatrix, projmatrix, mv
   
   
   if (index == 6 || index == 7) {
-      modelmatrix.rotate(angel, 1, 0, 0);
+      modelmatrix.rotate(angle, 1, 0, 0);
   }
 
   var TempScaleRatio = scaleRatio[index];
   modelmatrix.scale(TempScaleRatio[0], TempScaleRatio[1], TempScaleRatio[2]);
     
-  mvpmatrix.set(projmatrix).multiply(viewmatrix).multiply(modelmatrix)
+  mvpmatrix.set(projmatrix).multiply(viewmatrix).multiply(modelmatrix);
 
   var normalmatrix = new Matrix4();
   normalmatrix.setInverseOf(modelmatrix);
@@ -267,7 +272,7 @@ function drawSkybox(gl, SkyProgram, projMatrix, viewmatrix, texture, i){
 
   
   gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
-  if (i==0){
+  if (i == 0){
     gl.uniform1i(SkyProgram.u_SkyTexMap, 0);
     gl.activeTexture(gl.TEXTURE0);
   }
@@ -277,41 +282,3 @@ function drawSkybox(gl, SkyProgram, projMatrix, viewmatrix, texture, i){
   }
   gl.drawElements(gl.TRIANGLES, skyboxIndex.length, gl.UNSIGNED_SHORT,skyboxIndex.BYTES_PER_ELEMENT * 0);
 }
-
-/*
-function drawSkybox(gl, SkyProgram, projMatrix, viewmatrix, imgs){
-  
-  //传递参数
-  gl.useProgram(SkyProgram);
-
-  gl.uniformMatrix4fv(SkyProgram.u_ViewMatrix, false, skyviewmatrix.elements);
-  gl.uniformMatrix4fv(SkyProgram.u_ProjMatrix, false, projMatrix.elements);
-
-  var vertexSkyBuffer = gl.createBuffer();
-  if (!vertexSkyBuffer) {
-    console.log('Failed to create the buffer object vertexSkyBuffer');
-    return;
-  }
-
-  //纹理创建
-  var texture = gl.createTexture();
-  gl.activeTexture(gl.TEXTURE0);
-  gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
-
-  //创建六张纹理
-  for (var i = 0; i < 6; i++) {
-    gl.texImage2D(targets[i], 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, imgs[i]);    
-  }
-
-  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-  gl.uniform1i(SkyProgram.u_SkyTexMap, 0);
-  gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
-  gl.activeTexture(gl.TEXTURE0);
-  gl.drawElements(gl.TRIANGLES, skybox_IINDEX, gl.UNSIGNED_SHORT, skybox_IFSIZE * 0);
-}
-*/
-

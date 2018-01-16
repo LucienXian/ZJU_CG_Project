@@ -57,7 +57,7 @@ function SPHEREObjInit()
       console.log('Failed to set the vertex information');
       return;
 	}
-	readSPHEREOBJFile('../../resources/2.obj', gl, model1, 0.13, true);
+	readSPHEREOBJFile('../../resources/SPHERE.obj', gl, model1, 0.13, true);
 }
 
 function CLOUDObjInit()
@@ -91,7 +91,7 @@ function CLOUDObjInit()
       console.log('Failed to set the vertex information');
       return;
 	}
-	readCLOUDOBJFile('../../resources/t11.obj', gl, model2, 0.3, true);
+	readCLOUDOBJFile('../../resources/CLOUD.obj', gl, model2, 0.3, true);
 }
 
 function BOWIEObjInit()
@@ -125,7 +125,7 @@ function BOWIEObjInit()
       console.log('Failed to set the vertex information');
       return;
 	}
-	readBOWIEOBJFile('../../resources/tong.obj', gl, model3, 0.3, true);
+	readBOWIEOBJFile('../../resources/BOWIE.obj', gl, model3, 0.3, true);
 }
 
 // Read a file
@@ -298,7 +298,7 @@ function initArrayBufferForLaterUse(gl, data, num, type) {
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
 
-  buffer.num = num;
+	buffer.num = num;
     buffer.type = type;
 
     return buffer;

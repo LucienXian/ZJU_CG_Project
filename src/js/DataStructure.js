@@ -1,5 +1,6 @@
 var PlaneProgram;
 var SPHEREObjProgram;
+var SPHERERadius = 0.392600;
 var model1;
 var CLOUDObjProgram;
 var model2;
@@ -29,13 +30,16 @@ var projmatrix = new Matrix4();
 var mvpmatrix = new Matrix4();
 var viewProjMatrix = new Matrix4();
 
-var game;
+var game = {
+        status: "playing",
+        energy:100,
+    };
 var gl;
 var canvas;
 var replayMessage,fieldDistance;
 
 var FlyDis = 0;
-var angel = 0;
+var angle = 0;
 var time_last = Date.now();
 var floorAngel = 0;
 
@@ -85,7 +89,7 @@ var lightDirZ = 1;
 
 var gnear = 0, gfar = 10;
 var eyex = 0, eyey = 0, eyez = 4;
-var isTPP = 1;
+var isTPP = true;
 
 var scaleRatio = new Array(12);
 //the airplane
