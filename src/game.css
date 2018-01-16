@@ -126,6 +126,7 @@
 
 .score__value--dist {
 	font-size: 30px;
+	text-align: center;
 }
 
 .partisan {
@@ -162,3 +163,23 @@
 	bottom: 0vh;
 
 }
+
+
+.header {
+	position: absolute;
+	top: 25vh;
+	left: 0;
+	width: 100%;
+	text-align: center;
+	pointer-events: none;
+	font-family: 'Playfair Display';
+
+	font-style: italic;
+	font-size: 4.5em;
+	line-height: 1;
+	margin: 0;
+	letter-spacing: -0.025em;
+	color: #d1b790;
+}
+
+

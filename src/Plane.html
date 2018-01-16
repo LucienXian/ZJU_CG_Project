@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>A simmmmmple plane</title>
+  <link rel="stylesheet" type="text/css" href="../game.css" />
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://cdn.bootcss.com/html2canvas/0.4.1/html2canvas.js"></script>
+</head>
+
+<body onload="main()" style="padding: 0px; margin: 0px;">
+<div class="header"  id="scoreMessage" style="display:none;">
+  SCORE:0
+</div>
+
+<div class="message message--replay" id="replayMessage" style="display:none;">Click to Replay</div>
+
+<div class="message message--instructions" id="instructions">
+  Created by<span>冼庭锋——马哲——马欣尹——权钰清</span></div>
+
+<nav class="meta">
+  <a>
+    <div class="score__content" id="dist">
+      <div class="score__label">time</div>
+      <div class="score__value score__value--dist" id="distValue">100</div>
+    </div>
+  </a>
+  <a>
+    <div class="score__content" id="energy">
+      <div class="score__label">distance</div>
+      <div class="score__value score__value--dist" id="scoValue">0</div>
+    </div>
+  </a>
+</nav>
+
+<canvas id="webgl" width="1300" height="750" style="width:100%;height:100%;">
+  A simmmmmple plane
+</canvas>
+
+
+<!--<a class="down" href="" download="downImg">下载</a>-->
+<div class="partisan">
+  <part class="part">
+
+    <a class="demo-link"  id="saveImageBtn">Save Image</a>
+    <a class="demo-link"  id="downloadImageBtn">Download Image</a>
+    <a class="down" href="" download="downImg">下载</a>
+    <!--<button id="saveImageBtn">Save Image</button>-->
+    <!--<button id="downloadImageBtn">Download Image</button>-->
+  </part>
+</div>
+
+
+<script src="../../lib/cuon-utils.js"></script>
+<script src="../../lib/webgl-utils.js"></script>
+<script src="../../lib/webgl-debug.js"></script>
+<script src="../../lib/cuon-matrix.js"></script>
+<script src="../js/ObjParser.js"></script>
+<script src="../js/DataStructure.js"></script>
+<script src="../js/Shader.js"></script>
+<script src="../js/CollisionDetection.js"></script>
+<script src="../js/Draw.js"></script>
+<script src="../js/Incident.js"></script>
+<script src="../js/Init.js"></script>
+<script src="../js/Main.js"></script>
+</body>
+</html>
