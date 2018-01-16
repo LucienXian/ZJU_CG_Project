@@ -25,6 +25,7 @@ function resetGame() {
 	eyez = 4;
 	isTPP = true;
 	ObjPostion[0] = [2,7,12];
+	console.log(ObjPostion[0]);
 	ObjPostion[1] = [11,-3,-8];
 	ObjPostion[2] = [29,-5, -12];
 	ObjPostion[3] = [36,1,-4];
@@ -76,13 +77,16 @@ function loop() {
 
 		
     } else if (game.status == "gameover") {
-
         replayMessage.style.display="block";
         game.status = "waitingReplay";
 
     } else if (game.status == "waitingReplay") {
 
     }
+	else if(game.status == "Crash")
+	{
+		doCrash();
+	}
     requestAnimationFrame(loop);
 }
 

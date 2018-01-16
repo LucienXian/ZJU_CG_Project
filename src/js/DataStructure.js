@@ -1,11 +1,16 @@
 var PlaneProgram;
 var SPHEREObjProgram;
-var SPHERERadius = 0.392600;
 var model1;
 var CLOUDObjProgram;
+var model2;
+var BOWIEObjProgram;
+var model3;
+
+/****************************************Collision Detection Usage****************************************/
+var origin = new Vector4([0, 0, 0, 1]);
 var TestV1 = new Float32Array([
-	-1.112440, 0.364238, 1.923810,
-	0.887560, 2.364238, -0.076190
+	-1.112440 * 0.3, 0.364238 * 0.3, 1.923810 * 0.3,
+	0.887560 * 0.3, 2.364238 * 0.3, -0.076190 * 0.3
 ]);
 var TestN1 = new Float32Array([
 	0.0000, 0.0000, 1.0000,
@@ -13,21 +18,29 @@ var TestN1 = new Float32Array([
 	0.0000, -1.0000, 0.0000
 ]);
 var TestV2 = new Float32Array([
-	1.579052, 0.199960, -0.683089,
-	-1.579052, -0.199960, 0.683089
+	1.579052 * 0.3, 0.199960 * 0.3, -0.683089 * 0.3,
+	-1.579052 * 0.3, -0.199960 * 0.3, 0.683089 * 0.3
 ]);
 var TestN2 = new Float32Array([
 	0.7698, 0.4542, 0.4485,
 	0.6046, -0.7441, -0.2842,
 	0.2047, 0.4899, -0.8474
 ]);
-var model2;
-var BOWIEObjProgram;
+var tv1 = new Vector4([TestV1[0], TestV1[1], TestV1[2], 1]);
+var tv2 = new Vector4([TestV1[3], TestV1[4], TestV1[5], 1]);
+var tv3 = new Vector4([TestV2[0], TestV2[1], TestV2[2], 1]);
+var tv4 = new Vector4([TestV2[3], TestV2[4], TestV2[5], 1]);
+var tn1 = new Vector4([TestN1[0], TestN1[1], TestN1[2], 1]);
+var tn2 = new Vector4([TestN1[3], TestN1[4], TestN1[5], 1]);
+var tn3 = new Vector4([TestN1[6], TestN1[7], TestN1[8], 1]);
+var tn4 = new Vector4([TestN2[0], TestN2[1], TestN2[2], 1]);
+var tn5 = new Vector4([TestN2[3], TestN2[4], TestN2[5], 1]);
+var tn6 = new Vector4([TestN2[6], TestN2[7], TestN2[8], 1]);
+var SPHERERadius = 0.392600;
 var BOWIEwid = 0.439800;
 var BOWIElen = 0.758384;
 var BOWIEhei = 0.638112;
-var model3;
-
+/****************************************Collision Detection Usage****************************************/
 
 var SkyProgram;//skybox program
 var imgs;//load texture image
@@ -53,7 +66,7 @@ var viewProjMatrix = new Matrix4();
 
 var game = {
         status: "playing",
-        energy:100,
+        energy: 100
     };
 var gl;
 var canvas;

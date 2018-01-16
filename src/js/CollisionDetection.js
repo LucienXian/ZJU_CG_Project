@@ -1,60 +1,46 @@
-function isCollision()
+function CollisionDetection()
 {
 	for(var i = 0; i < 8; i++)
 	{
+		setCubeModelMatrix(i);
 		for(var j = 0; j < 18; j++)
 		{
 			if(j >= 0 && j < 6)
 			{
-				if(isCollideToCLOUD(i, j))
-					return true;
+				if(isCollideToCLOUD(j))
+				{
+					game.status = "Crash";
+					return;
+				}
 				else
 					continue;
 			}
 			else if(j >= 6 && j < 12)
 			{
-				if(isCollideToSphere(i, j))
-					return true;
+				if(isCollideToSphere(j))
+				{
+					game.status = "add";
+					return;
+				}
 				else
 					continue;
 			}
 			else if(j >= 12 && j < 18)
 			{
-				if(isCollideToBOWIE(i, j))
-					return true;
+				if(isCollideToBOWIE(j))
+				{	
+					game.status = "Crash";
+					return;
+				}
 				else
 					continue;
 			}
 		}
 	}
-	return false;
 }
 
-function isCollideToSphere(Cubei, Spherej)
+function isCollideToSphere(Spherej)
 {
-/********************************* Cubei **************************************************/
- 	var TempTransfer = translateDis[Cubei];
-  
-
-	if (isTPP) {
-		modelmatrix.setTranslate(transformx + FlyDis, transformy, transformz);
-		modelmatrix.rotate(PlaneAngel, 0, 0, 1);
-		modelmatrix.translate(TempTransfer[0]  , TempTransfer[1] , TempTransfer[2]);
-	}
-	else  {
-		modelmatrix.setTranslate(FlyDis + transformx, transformy, transformz);
-		modelmatrix.rotate(PlaneAngel, 0, 0, 1);
-		modelmatrix.translate(TempTransfer[0] , TempTransfer[1] , TempTransfer[2]);
-	}
-  
-  
-	if (Cubei == 6 || Cubei == 7) {
-		modelmatrix.rotate(angle, 1, 0, 0);
-	}
-
-	var TempScaleRatio = scaleRatio[Cubei];
-	modelmatrix.scale(TempScaleRatio[0], TempScaleRatio[1], TempScaleRatio[2]);
-
 /********************************* Spherej **************************************************/	
 	var TempPos = ObjPostion[Spherej];
 
@@ -64,7 +50,6 @@ function isCollideToSphere(Cubei, Spherej)
 		var v = new Vector4([(i >> 2) & 1, (i >> 1) & 1, i & 1, 1]);
 		var v_t = modelmatrix.multiplyVector4(v);
 		var r = Math.sqrt((v_t.elements[0] - g.elements[0]) *  (v_t.elements[0] - g.elements[0]) + (v_t.elements[1] - g.elements[1]) *  (v_t.elements[1] - g.elements[1]) + (v_t.elements[2] - g.elements[2]) *  (v_t.elements[2] - g.elements[2]));
-		console.log("r"+r);
 		if(r < SPHERERadius)
 		{
 			return true;
@@ -73,30 +58,8 @@ function isCollideToSphere(Cubei, Spherej)
 	return false;
 }
 
-function isCollideToBOWIE(Cubei, Bowiej)
+function isCollideToBOWIE(Bowiej)
 {
-	var TempTransfer = translateDis[Cubei];
-  
-
-	if (isTPP) {
-		modelmatrix.setTranslate(transformx + FlyDis, transformy, transformz);
-		modelmatrix.rotate(PlaneAngel, 0, 0, 1);
-		modelmatrix.translate(TempTransfer[0]  , TempTransfer[1] , TempTransfer[2]);
-	}
-	else  {
-		modelmatrix.setTranslate(FlyDis + transformx, transformy, transformz);
-		modelmatrix.rotate(PlaneAngel, 0, 0, 1);
-		modelmatrix.translate(TempTransfer[0] , TempTransfer[1] , TempTransfer[2]);
-	}
-  
-  
-	if (Cubei == 6 || Cubei == 7) {
-		modelmatrix.rotate(angle, 1, 0, 0);
-	}
-
-	var TempScaleRatio = scaleRatio[Cubei];
-	modelmatrix.scale(TempScaleRatio[0], TempScaleRatio[1], TempScaleRatio[2]);
-
 /********************************* Spherej **************************************************/	
 	var TempPos = ObjPostion[Bowiej];
 
@@ -117,30 +80,8 @@ function isCollideToBOWIE(Cubei, Bowiej)
 	return false;
 }
 
-function isCollideToCLOUD(Cubei, Cloudj)
+function isCollideToCLOUD(Cloudj)
 {
-	var TempTransfer = translateDis[Cubei];
-  
-
-	if (isTPP) {
-		modelmatrix.setTranslate(transformx + FlyDis, transformy, transformz);
-		modelmatrix.rotate(PlaneAngel, 0, 0, 1);
-		modelmatrix.translate(TempTransfer[0]  , TempTransfer[1] , TempTransfer[2]);
-	}
-	else  {
-		modelmatrix.setTranslate(FlyDis + transformx, transformy, transformz);
-		modelmatrix.rotate(PlaneAngel, 0, 0, 1);
-		modelmatrix.translate(TempTransfer[0] , TempTransfer[1] , TempTransfer[2]);
-	}
-  
-  
-	if (Cubei == 6 || Cubei == 7) {
-		modelmatrix.rotate(angle, 1, 0, 0);
-	}
-
-	var TempScaleRatio = scaleRatio[Cubei];
-	modelmatrix.scale(TempScaleRatio[0], TempScaleRatio[1], TempScaleRatio[2]);
-
 /********************************* Spherej **************************************************/	
 	var TempPos = ObjPostion[Cloudj];
 	g_modelMatrix.setTranslate(TempPos[0], TempPos[1], TempPos[2]);
@@ -148,29 +89,17 @@ function isCollideToCLOUD(Cubei, Cloudj)
       g_modelMatrix.rotate(angle, 0.0, 1.0, 0.0); 
 	g_modelMatrix.rotate(90, 0,0,1);
 	
-	var v1 = new Vector4([TestV1[0], TestV1[1], TestV1[2], 1]);
-	var v2 = new Vector4([TestV1[3], TestV1[4], TestV1[5], 1]);
-	var v3 = new Vector4([TestV2[0], TestV2[1], TestV2[2], 1]);
-	var v4 = new Vector4([TestV2[3], TestV2[4], TestV2[5], 1]);
-	var n1 = new Vector4([TestN1[0], TestN1[1], TestN1[2], 1]);
-	var n2 = new Vector4([TestN1[3], TestN1[4], TestN1[5], 1]);
-	var n3 = new Vector4([TestN1[6], TestN1[7], TestN1[8], 1]);
-	var n4 = new Vector4([TestN2[0], TestN2[1], TestN2[2], 1]);
-	var n5 = new Vector4([TestN2[3], TestN2[4], TestN2[5], 1]);
-	var n6 = new Vector4([TestN2[6], TestN2[7], TestN2[8], 1]);
-	var zero = new Vector4([0, 0, 0, 1]);
-	var v1_t = g_modelMatrix.multiplyVector4(v1);
-	var v2_t = g_modelMatrix.multiplyVector4(v2);
-	var v3_t = g_modelMatrix.multiplyVector4(v3);
-	var v4_t = g_modelMatrix.multiplyVector4(v4);
-	var n1_t = g_modelMatrix.multiplyVector4(n1);
-	console.log("n1_t"+n1_t.elements);
-	var n2_t = g_modelMatrix.multiplyVector4(n2);
-	var n3_t = g_modelMatrix.multiplyVector4(n3);
-	var n4_t = g_modelMatrix.multiplyVector4(n4);
-	var n5_t = g_modelMatrix.multiplyVector4(n5);
-	var n6_t = g_modelMatrix.multiplyVector4(n6);
-	var zero_t = g_modelMatrix.multiplyVector4(zero);
+	var v1_t = g_modelMatrix.multiplyVector4(tv1);
+	var v2_t = g_modelMatrix.multiplyVector4(tv2);
+	var v3_t = g_modelMatrix.multiplyVector4(tv3);
+	var v4_t = g_modelMatrix.multiplyVector4(tv4);
+	var n1_t = g_modelMatrix.multiplyVector4(tn1);
+	var n2_t = g_modelMatrix.multiplyVector4(tn2);
+	var n3_t = g_modelMatrix.multiplyVector4(tn3);
+	var n4_t = g_modelMatrix.multiplyVector4(tn4);
+	var n5_t = g_modelMatrix.multiplyVector4(tn5);
+	var n6_t = g_modelMatrix.multiplyVector4(tn6);
+	var zero_t = g_modelMatrix.multiplyVector4(origin);
 	n1_t.elements[0] = n1_t.elements[0] - zero_t.elements[0];
 	n1_t.elements[1] = n1_t.elements[1] - zero_t.elements[1];
 	n1_t.elements[2] = n1_t.elements[2] - zero_t.elements[2];
@@ -203,7 +132,6 @@ function isCollideToCLOUD(Cubei, Cloudj)
 	{
 		var v = new Vector4([(i >> 2) & 1, (i >> 1) & 1, i & 1, 1]);
 		var v_t = modelmatrix.multiplyVector4(v);
-		console.log("v_t"+v_t.elements);
 		r1.elements[0] = v1_t.elements[0] - v_t.elements[0];
 		r1.elements[1] = v1_t.elements[1] - v_t.elements[1];
 		r1.elements[2] = v1_t.elements[2] - v_t.elements[2];
@@ -256,4 +184,29 @@ function isCollideToCLOUD(Cubei, Cloudj)
 		}
 	}
 	return false;
+}
+
+function setCubeModelMatrix(i)
+{
+	var TempTransfer = translateDis[i];
+  
+
+	if (isTPP) {
+		modelmatrix.setTranslate(transformx + FlyDis, transformy, transformz);
+		modelmatrix.rotate(PlaneAngel, 0, 0, 1);
+		modelmatrix.translate(TempTransfer[0]  , TempTransfer[1] , TempTransfer[2]);
+	}
+	else  {
+		modelmatrix.setTranslate(FlyDis + transformx, transformy, transformz);
+		modelmatrix.rotate(PlaneAngel, 0, 0, 1);
+		modelmatrix.translate(TempTransfer[0] , TempTransfer[1] , TempTransfer[2]);
+	}
+  
+  
+	if (i == 6 || i == 7) {
+		modelmatrix.rotate(angle, 1, 0, 0);
+	}
+
+	var TempScaleRatio = scaleRatio[i];
+	modelmatrix.scale(TempScaleRatio[0], TempScaleRatio[1], TempScaleRatio[2]);
 }

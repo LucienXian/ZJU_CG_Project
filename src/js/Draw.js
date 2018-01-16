@@ -93,28 +93,30 @@ var redraw = function()
     for (var i=12; i<18; i++)
       drawObj(gl, BOWIEObjProgram, viewProjMatrix, model3, g_objDoc_BOWIE, g_drawingInfo_BOWIE, i);
     
-    drawPlaneCube(gl, PlaneProgram, cube_red, 0, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix);
-    drawPlaneCube(gl, PlaneProgram, cube_red, 1, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix);
-    drawPlaneCube(gl, PlaneProgram, cube_red, 2, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix);
-    drawPlaneCube(gl, PlaneProgram, cube_white, 3, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix);
-    drawPlaneCube(gl, PlaneProgram, cube_red, 4, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix);
-    drawPlaneCube(gl, PlaneProgram, cube_black, 5, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix);
-    drawPlaneCube(gl, PlaneProgram, cube_black, 6, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix);
-    drawPlaneCube(gl, PlaneProgram, cube_black, 7, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix);
+    drawPlaneCube(gl, PlaneProgram, cube_red, 0, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix, 0);
+    drawPlaneCube(gl, PlaneProgram, cube_red, 1, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix, 0);
+    drawPlaneCube(gl, PlaneProgram, cube_red, 2, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix, 0);
+    drawPlaneCube(gl, PlaneProgram, cube_white, 3, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix, 0);
+    drawPlaneCube(gl, PlaneProgram, cube_red, 4, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix, 0);
+    drawPlaneCube(gl, PlaneProgram, cube_black, 5, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix, 0);
+    drawPlaneCube(gl, PlaneProgram, cube_black, 6, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix, 0);
+    drawPlaneCube(gl, PlaneProgram, cube_black, 7, viewmatrix, modelmatrix, projmatrix, mvpmatrix, PlaneProgram.u_MvpMatrix , PlaneProgram.u_NormalMatrix, 0);
 
     if (flag > 0)
       drawSkybox(gl, SkyProgram, projmatrix, viewmatrix, texture0, 0);
     else
       drawSkybox(gl, SkyProgram, projmatrix, viewmatrix, texture1, 1);
-
-	if(isCollision())
-	{
-		game.status = "gameover";
-		console.log("Collision!");
-	}
 	
-	if (game.status == "playing")
+	if(game.status == "playing")
+	{
+		CollisionDetection();
+		console.log("Done Collision Detection!\n");
+	}
+	if(game.status == "playing")
+	{
 		requestAnimationFrame(redraw, canvas);
+		console.log("Redraw!\n");
+	}
  }
  
 
@@ -159,7 +161,7 @@ function drawObj(gl, program, viewProjMatrix, model, objDoc, drawingInfo, index)
     gl.drawElements(gl.TRIANGLES, drawingInfo.indices.length, gl.UNSIGNED_SHORT, 0);
 }
 
-function drawPlaneCube(gl, program, o, i, viewmatrix, modelmatrix, projmatrix, mvpmatrix, u_MvpMatrix , u_NormalMatrix) {
+function drawPlaneCube(gl, program, o, i, viewmatrix, modelmatrix, projmatrix, mvpmatrix, u_MvpMatrix , u_NormalMatrix, CrashRotate) {
     gl.useProgram(program);   
 
     gl.uniform3f(program.u_LightColor, light_color[0] , light_color[1], light_color[2]);
@@ -172,10 +174,10 @@ function drawPlaneCube(gl, program, o, i, viewmatrix, modelmatrix, projmatrix, m
     initAttributeVariable(gl, program.a_Color, o.colorBuffer); 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, o.indexBuffer);  
 
-    drawCube(gl, program, o, i, viewmatrix, modelmatrix, projmatrix, mvpmatrix, u_MvpMatrix ,u_NormalMatrix);
+    drawCube(gl, program, o, i, viewmatrix, modelmatrix, projmatrix, mvpmatrix, u_MvpMatrix ,u_NormalMatrix, CrashRotate);
 }
 
-function drawCube(gl, program, o, index, viewmatrix, modelmatrix, projmatrix, mvpmatrix, u_MvpMatrix , u_NormalMatrix) {
+function drawCube(gl, program, o, index, viewmatrix, modelmatrix, projmatrix, mvpmatrix, u_MvpMatrix , u_NormalMatrix, CrashRotate) {
 
   var a_Color = gl.getAttribLocation(program, 'a_Color');
   if (a_Color < 0) {
@@ -190,13 +192,15 @@ function drawCube(gl, program, o, index, viewmatrix, modelmatrix, projmatrix, mv
   
 
   if (isTPP) {
-      modelmatrix.setTranslate(transformx +FlyDis, transformy, transformz);
+      modelmatrix.setTranslate(FlyDis + transformx, transformy, transformz);
+      modelmatrix.rotate(CrashRotate, 1, 0, 0);
       modelmatrix.rotate(PlaneAngel, 0, 0, 1);
       modelmatrix.translate(TempTransfer[0]  , TempTransfer[1] , TempTransfer[2] )
   }
   else  {
       modelmatrix.setTranslate(FlyDis + transformx, transformy, transformz);
-      //modelmatrix.rotate(PlaneAngel, 0, 0, 1);
+      modelmatrix.rotate(CrashRotate, 1, 0, 0);
+	  //modelmatrix.rotate(PlaneAngel, 0, 0, 1);
       modelmatrix.translate(TempTransfer[0] , TempTransfer[1] , TempTransfer[2] )
   }
   

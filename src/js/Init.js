@@ -91,7 +91,7 @@ function CLOUDObjInit()
       console.log('Failed to set the vertex information');
       return;
 	}
-	readCLOUDOBJFile('../../resources/CLOUD.obj', gl, model2, 1, true);
+	readCLOUDOBJFile('../../resources/CLOUD.obj', gl, model2, 0.3, true);
 }
 
 function BOWIEObjInit()
