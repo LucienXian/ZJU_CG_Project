@@ -158,16 +158,43 @@ function isCollideToCLOUD(Cubei, Cloudj)
 	var n4 = new Vector4([TestN2[0], TestN2[1], TestN2[2], 1]);
 	var n5 = new Vector4([TestN2[3], TestN2[4], TestN2[5], 1]);
 	var n6 = new Vector4([TestN2[6], TestN2[7], TestN2[8], 1]);
+	var zero = new Vector4([0, 0, 0, 1]);
 	var v1_t = g_modelMatrix.multiplyVector4(v1);
 	var v2_t = g_modelMatrix.multiplyVector4(v2);
 	var v3_t = g_modelMatrix.multiplyVector4(v3);
 	var v4_t = g_modelMatrix.multiplyVector4(v4);
 	var n1_t = g_modelMatrix.multiplyVector4(n1);
+	console.log("n1_t"+n1_t.elements);
 	var n2_t = g_modelMatrix.multiplyVector4(n2);
 	var n3_t = g_modelMatrix.multiplyVector4(n3);
 	var n4_t = g_modelMatrix.multiplyVector4(n4);
 	var n5_t = g_modelMatrix.multiplyVector4(n5);
 	var n6_t = g_modelMatrix.multiplyVector4(n6);
+	var zero_t = g_modelMatrix.multiplyVector4(zero);
+	n1_t.elements[0] = n1_t.elements[0] - zero_t.elements[0];
+	n1_t.elements[1] = n1_t.elements[1] - zero_t.elements[1];
+	n1_t.elements[2] = n1_t.elements[2] - zero_t.elements[2];
+	
+	n2_t.elements[0] = n2_t.elements[0] - zero_t.elements[0];
+	n2_t.elements[1] = n2_t.elements[1] - zero_t.elements[1];
+	n2_t.elements[2] = n2_t.elements[2] - zero_t.elements[2];
+	
+	n3_t.elements[0] = n3_t.elements[0] - zero_t.elements[0];
+	n3_t.elements[1] = n3_t.elements[1] - zero_t.elements[1];
+	n3_t.elements[2] = n3_t.elements[2] - zero_t.elements[2];
+
+	n4_t.elements[0] = n4_t.elements[0] - zero_t.elements[0];
+	n4_t.elements[1] = n4_t.elements[1] - zero_t.elements[1];
+	n4_t.elements[2] = n4_t.elements[2] - zero_t.elements[2];
+
+	n5_t.elements[0] = n5_t.elements[0] - zero_t.elements[0];
+	n5_t.elements[1] = n5_t.elements[1] - zero_t.elements[1];
+	n5_t.elements[2] = n5_t.elements[2] - zero_t.elements[2];
+
+	n6_t.elements[0] = n6_t.elements[0] - zero_t.elements[0];
+	n6_t.elements[1] = n6_t.elements[1] - zero_t.elements[1];
+	n6_t.elements[2] = n6_t.elements[2] - zero_t.elements[2];
+
 	var r1 = new Vector3();
 	var r2 = new Vector3();
 	var r3 = new Vector3();
