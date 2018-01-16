@@ -3,8 +3,29 @@ var SPHEREObjProgram;
 var SPHERERadius = 0.392600;
 var model1;
 var CLOUDObjProgram;
+var TestV1 = new Float32Array([
+	-1.112440 * 0.3, 0.364238 * 0.3, 1.923810 * 0.3,
+	0.887560 * 0.3, 2.364238 * 0.3, -0.076190 * 0.3
+]);
+var TestN1 = new Float32Array([
+	0.0000, 0.0000, 1.0000,
+	-1.0000, 0.0000, 0.0000,
+	0.0000, -1.0000, 0.0000
+]);
+var TestV2 = new Float32Array([
+	1.579052 * 0.3, 0.199960 * 0.3, -0.683089 * 0.3,
+	-1.579052 * 0.3, -0.199960 * 0.3, 0.683089 * 0.3
+]);
+var TestN2 = new Float32Array([
+	0.7698, 0.4542, 0.4485,
+	0.6046, -0.7441, -0.2842,
+	0.2047, 0.4899, -0.8474
+]);
 var model2;
 var BOWIEObjProgram;
+var BOWIEwid = 0.439800;
+var BOWIElen = 0.758384;
+var BOWIEhei = 0.638112;
 var model3;
 
 

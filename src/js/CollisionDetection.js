@@ -4,9 +4,27 @@ function isCollision()
 	{
 		for(var j = 0; j < 18; j++)
 		{
-			if(j >= 6 && j < 12)
+			if(j >= 0 && j < 6)
+			{
+				if(isCollideToCLOUD(i, j))
+					return true;
+				else
+					continue;
+			}
+			else if(j >= 6 && j < 12)
+			{
 				if(isCollideToSphere(i, j))
 					return true;
+				else
+					continue;
+			}
+			else if(j >= 12 && j < 18)
+			{
+				if(isCollideToBOWIE(i, j))
+					return true;
+				else
+					continue;
+			}
 		}
 	}
 	return false;
@@ -19,14 +37,14 @@ function isCollideToSphere(Cubei, Spherej)
   
 
 	if (isTPP) {
-		modelmatrix.setTranslate(transformx +FlyDis, transformy, transformz);
+		modelmatrix.setTranslate(transformx + FlyDis, transformy, transformz);
 		modelmatrix.rotate(PlaneAngel, 0, 0, 1);
-		modelmatrix.translate(TempTransfer[0]  , TempTransfer[1] , TempTransfer[2] )
+		modelmatrix.translate(TempTransfer[0]  , TempTransfer[1] , TempTransfer[2]);
 	}
 	else  {
 		modelmatrix.setTranslate(FlyDis + transformx, transformy, transformz);
 		modelmatrix.rotate(PlaneAngel, 0, 0, 1);
-		modelmatrix.translate(TempTransfer[0] , TempTransfer[1] , TempTransfer[2] )
+		modelmatrix.translate(TempTransfer[0] , TempTransfer[1] , TempTransfer[2]);
 	}
   
   
@@ -40,66 +58,171 @@ function isCollideToSphere(Cubei, Spherej)
 /********************************* Spherej **************************************************/	
 	var TempPos = ObjPostion[Spherej];
 
-   // g_modelMatrix.setTranslate(TempPos[0], TempPos[1], TempPos[2]);
-    //if (Spherej >=6 && Spherej <= 9)
-     // g_modelMatrix.rotate(angle, 0.0, 1.0, 0.0); 
-    //g_modelMatrix.rotate(90, 0,0,1);
-	
-	//var g0 = new Vector3([0, 0, 0]);
 	var g = new Vector3([TempPos[0], TempPos[1], TempPos[2]]);
-	console.log("g"+g.elements);
-	for(var i = 0; i < 6; i++)
+	for(var i = 0; i < 8; i++)
 	{
-		var v1 = new Vector3([vertices[12 * i], vertices[12 * i + 1], vertices[12 * i + 2]]);
-		var v2 = new Vector3([vertices[12 * i + 3], vertices[12 * i + 4], vertices[12 * i + 5]]);
-		var v3 = new Vector3([vertices[12 * i + 6], vertices[12 * i + 7], vertices[12 * i + 8]]);
-		var v4 = new Vector3([vertices[12 * i + 9], vertices[12 * i + 10], vertices[12 * i + 11]]);
-		var v1_t = modelmatrix.multiplyVector3(v1);
-		var v2_t = modelmatrix.multiplyVector3(v2);
-		var v3_t = modelmatrix.multiplyVector3(v3);
-		var v4_t = modelmatrix.multiplyVector3(v4);
-		var r1 = Math.sqrt((v1_t.elements[0] - g.elements[0]) *  (v1_t.elements[0] - g.elements[0]) + (v1_t.elements[1] - g.elements[1]) *  (v1_t.elements[1] - g.elements[1]) + (v1_t.elements[2] - g.elements[2]) *  (v1_t.elements[2] - g.elements[2]));
-		console.log("r1"+r1);
-		if(r1 < SPHERERadius)
+		var v = new Vector4([(i >> 2) & 1, (i >> 1) & 1, i & 1, 1]);
+		var v_t = modelmatrix.multiplyVector4(v);
+		var r = Math.sqrt((v_t.elements[0] - g.elements[0]) *  (v_t.elements[0] - g.elements[0]) + (v_t.elements[1] - g.elements[1]) *  (v_t.elements[1] - g.elements[1]) + (v_t.elements[2] - g.elements[2]) *  (v_t.elements[2] - g.elements[2]));
+		console.log("r"+r);
+		if(r < SPHERERadius)
 		{
-			console.log("SPHERE"+Spherej);
-			console.log("r1"+r1);
-			console.log("g"+g.elements);
-			console.log("x"+(TempTransfer[0]+transformx +FlyDis));
 			return true;
 		}
-		else
+	}
+	return false;
+}
+
+function isCollideToBOWIE(Cubei, Bowiej)
+{
+	var TempTransfer = translateDis[Cubei];
+  
+
+	if (isTPP) {
+		modelmatrix.setTranslate(transformx + FlyDis, transformy, transformz);
+		modelmatrix.rotate(PlaneAngel, 0, 0, 1);
+		modelmatrix.translate(TempTransfer[0]  , TempTransfer[1] , TempTransfer[2]);
+	}
+	else  {
+		modelmatrix.setTranslate(FlyDis + transformx, transformy, transformz);
+		modelmatrix.rotate(PlaneAngel, 0, 0, 1);
+		modelmatrix.translate(TempTransfer[0] , TempTransfer[1] , TempTransfer[2]);
+	}
+  
+  
+	if (Cubei == 6 || Cubei == 7) {
+		modelmatrix.rotate(angle, 1, 0, 0);
+	}
+
+	var TempScaleRatio = scaleRatio[Cubei];
+	modelmatrix.scale(TempScaleRatio[0], TempScaleRatio[1], TempScaleRatio[2]);
+
+/********************************* Spherej **************************************************/	
+	var TempPos = ObjPostion[Bowiej];
+
+	var g = new Vector3([TempPos[0], TempPos[1], TempPos[2]]);
+	for(var i = 0; i < 8; i++)
+	{
+		var v = new Vector4([(i >> 2) & 1, (i >> 1) & 1, i & 1, 1]);
+		var v_t = modelmatrix.multiplyVector4(v);
+		if((v_t.elements[0] >= g.elements[0] - BOWIElen) && (v_t.elements[0] <= g.elements[0] + BOWIElen))
 		{
-			var r2 = Math.sqrt((v2_t.elements[0] - g.elements[0]) *  (v2_t.elements[0] - g.elements[0]) + (v2_t.elements[1] - g.elements[1]) *  (v2_t.elements[1] - g.elements[1]) + (v2_t.elements[2] - g.elements[2]) *  (v2_t.elements[2] - g.elements[2]));
-			console.log("r2"+r2);
-			if(r2 < SPHERERadius)
+			if((v_t.elements[1] >= g.elements[1] - BOWIEwid) && (v_t.elements[1] <= g.elements[1] + BOWIEwid))
 			{
-				console.log("SPHERE"+Spherej);
-				console.log("r2"+r2);
-				console.log("x"+(TempTransfer[0]+transformx +FlyDis));
-				return true;
-			}
-			else
-			{
-				var r3 = Math.sqrt((v3_t.elements[0] - g.elements[0]) *  (v3_t.elements[0] - g.elements[0]) + (v3_t.elements[1] - g.elements[1]) *  (v3_t.elements[1] - g.elements[1]) + (v3_t.elements[2] - g.elements[2]) *  (v3_t.elements[2] - g.elements[2]));
-				console.log("r3"+r3);
-				if(r3 < SPHERERadius)
-				{
-					console.log("SPHERE"+Spherej);
-					console.log("r3"+r3);
-					console.log("x"+(TempTransfer[0]+transformx +FlyDis));
+				if((v_t.elements[2] >= g.elements[2] - BOWIEhei) && (v_t.elements[2] <= g.elements[2] + BOWIEhei))
 					return true;
-				}
-				else
+			}
+		}
+	}
+	return false;
+}
+
+function isCollideToCLOUD(Cubei, Cloudj)
+{
+	var TempTransfer = translateDis[Cubei];
+  
+
+	if (isTPP) {
+		modelmatrix.setTranslate(transformx + FlyDis, transformy, transformz);
+		modelmatrix.rotate(PlaneAngel, 0, 0, 1);
+		modelmatrix.translate(TempTransfer[0]  , TempTransfer[1] , TempTransfer[2]);
+	}
+	else  {
+		modelmatrix.setTranslate(FlyDis + transformx, transformy, transformz);
+		modelmatrix.rotate(PlaneAngel, 0, 0, 1);
+		modelmatrix.translate(TempTransfer[0] , TempTransfer[1] , TempTransfer[2]);
+	}
+  
+  
+	if (Cubei == 6 || Cubei == 7) {
+		modelmatrix.rotate(angle, 1, 0, 0);
+	}
+
+	var TempScaleRatio = scaleRatio[Cubei];
+	modelmatrix.scale(TempScaleRatio[0], TempScaleRatio[1], TempScaleRatio[2]);
+
+/********************************* Spherej **************************************************/	
+	var TempPos = ObjPostion[Cloudj];
+	g_modelMatrix.setTranslate(TempPos[0], TempPos[1], TempPos[2]);
+    if (Cloudj>=6 && Cloudj <= 9)
+      g_modelMatrix.rotate(angle, 0.0, 1.0, 0.0); 
+	g_modelMatrix.rotate(90, 0,0,1);
+	
+	var v1 = new Vector4([TestV1[0], TestV1[1], TestV1[2], 1]);
+	var v2 = new Vector4([TestV1[3], TestV1[4], TestV1[5], 1]);
+	var v3 = new Vector4([TestV2[0], TestV2[1], TestV2[2], 1]);
+	var v4 = new Vector4([TestV2[3], TestV2[4], TestV2[5], 1]);
+	var n1 = new Vector4([TestN1[0], TestN1[1], TestN1[2], 1]);
+	var n2 = new Vector4([TestN1[3], TestN1[4], TestN1[5], 1]);
+	var n3 = new Vector4([TestN1[6], TestN1[7], TestN1[8], 1]);
+	var n4 = new Vector4([TestN2[0], TestN2[1], TestN2[2], 1]);
+	var n5 = new Vector4([TestN2[3], TestN2[4], TestN2[5], 1]);
+	var n6 = new Vector4([TestN2[6], TestN2[7], TestN2[8], 1]);
+	var v1_t = g_modelMatrix.multiplyVector4(v1);
+	var v2_t = g_modelMatrix.multiplyVector4(v2);
+	var v3_t = g_modelMatrix.multiplyVector4(v3);
+	var v4_t = g_modelMatrix.multiplyVector4(v4);
+	var n1_t = g_modelMatrix.multiplyVector4(n1);
+	var n2_t = g_modelMatrix.multiplyVector4(n2);
+	var n3_t = g_modelMatrix.multiplyVector4(n3);
+	var n4_t = g_modelMatrix.multiplyVector4(n4);
+	var n5_t = g_modelMatrix.multiplyVector4(n5);
+	var n6_t = g_modelMatrix.multiplyVector4(n6);
+	var r1 = new Vector3();
+	var r2 = new Vector3();
+	var r3 = new Vector3();
+	var r4 = new Vector3();
+	for(var i = 0; i < 8; i++)
+	{
+		var v = new Vector4([(i >> 2) & 1, (i >> 1) & 1, i & 1, 1]);
+		var v_t = modelmatrix.multiplyVector4(v);
+		console.log("v_t"+v_t.elements);
+		r1.elements[0] = v1_t.elements[0] - v_t.elements[0];
+		r1.elements[1] = v1_t.elements[1] - v_t.elements[1];
+		r1.elements[2] = v1_t.elements[2] - v_t.elements[2];
+		r2.elements[0] = v2_t.elements[0] - v_t.elements[0];
+		r2.elements[1] = v2_t.elements[1] - v_t.elements[1];
+		r2.elements[2] = v2_t.elements[2] - v_t.elements[2];
+		r3.elements[0] = v3_t.elements[0] - v_t.elements[0];
+		r3.elements[1] = v3_t.elements[1] - v_t.elements[1];
+		r3.elements[2] = v3_t.elements[2] - v_t.elements[2];
+		r4.elements[0] = v4_t.elements[0] - v_t.elements[0];
+		r4.elements[1] = v4_t.elements[1] - v_t.elements[1];
+		r4.elements[2] = v4_t.elements[2] - v_t.elements[2];
+		if((r1.elements[0] * n1_t.elements[0] + r1.elements[1] * n1_t.elements[1] + r1.elements[2] * n1_t.elements[2]) >= 0)
+		{
+			if((r1.elements[0] * n2_t.elements[0] + r1.elements[1] * n2_t.elements[1] + r1.elements[2] * n2_t.elements[2]) >= 0)
+			{
+				if((r1.elements[0] * n3_t.elements[0] + r1.elements[1] * n3_t.elements[1] + r1.elements[2] * n3_t.elements[2]) >= 0)
 				{
-					var r4 = Math.sqrt((v4_t.elements[0] - g.elements[0]) *  (v4_t.elements[0] - g.elements[0]) + (v4_t.elements[1] - g.elements[1]) * (v4_t.elements[1] - g.elements[1]) + (v4_t.elements[2] - g.elements[2]) * (v4_t.elements[2] - g.elements[2]));
-					console.log("r4"+r4);
-					if(r4 < SPHERERadius)
+					if((r2.elements[0] * -(n1_t.elements[0]) + r2.elements[1] * -(n1_t.elements[1]) + r2.elements[2] * -(n1_t.elements[2])) >= 0)
 					{
-						console.log("SPHERE"+Spherej);
-						console.log("r4"+r4);
-						console.log("x"+(TempTransfer[0]+transformx +FlyDis));
-						return true;
+						if((r2.elements[0] * -(n2_t.elements[0]) + r2.elements[1] * -(n2_t.elements[1]) + r2.elements[2] * -(n2_t.elements[2])) >= 0)
+						{
+							if((r2.elements[0] * -(n3_t.elements[0]) + r2.elements[1] * -(n3_t.elements[1]) + r2.elements[2] * -(n3_t.elements[2])) >= 0)
+							{
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		if((r3.elements[0] * n4_t.elements[0] + r3.elements[1] * n4_t.elements[1] + r3.elements[2] * n4_t.elements[2]) >= 0)
+		{
+			if((r3.elements[0] * n5_t.elements[0] + r3.elements[1] * n5_t.elements[1] + r3.elements[2] * n5_t.elements[2]) >= 0)
+			{
+				if((r3.elements[0] * n6_t.elements[0] + r3.elements[1] * n6_t.elements[1] + r3.elements[2] * n6_t.elements[2]) >= 0)
+				{
+					if((r4.elements[0] * -(n4_t.elements[0]) + r4.elements[1] * -(n4_t.elements[1]) + r4.elements[2] * -(n4_t.elements[2])) >= 0)
+					{
+						if((r4.elements[0] * -(n5_t.elements[0]) + r4.elements[1] * -(n5_t.elements[1]) + r4.elements[2] * -(n5_t.elements[2])) >= 0)
+						{
+							if((r4.elements[0] * -(n6_t.elements[0]) + r4.elements[1] * -(n6_t.elements[1]) + r4.elements[2] * -(n6_t.elements[2])) >= 0)
+							{
+								return true;
+							}
+						}
 					}
 				}
 			}
